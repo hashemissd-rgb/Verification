@@ -362,8 +362,8 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
   <div class="hero">
     <div class="bismi">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
     <div class="tasl">✦ ✦ ✦</div>
-    <div class="hero-pill"><i class="fas fa-shield-alt"></i> النظام الرسمي للتحقق والعضوية</div>
-    <h1>مرحباً بك في نظامنا الرسمي</h1>
+    <div class="hero-pill"><i class="fas fa-shield-alt"></i>السادة الاشراف الطالبين</div>
+    <h1>مرحباً بك في النظام الرسمي</h1>
     <h2>Official Verification &amp; Membership System</h2>
     <p>اختر الخدمة المطلوبة لتقديم طلبك أو متابعة حالة طلباتك السابقة</p>
   </div>
@@ -468,7 +468,7 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
           <div id="ve2" class="al al-err" style="display:none;"><i class="fas fa-exclamation-circle"></i><span></span></div>
           <div style="display:flex;gap:9px;flex-wrap:wrap;">
             <button class="btn btn-ghost" onclick="vstep(1)"><i class="fas fa-arrow-right"></i> السابق</button>
-            <button id="vsub-btn" class="btn btn-gold" style="flex:1;justify-content:center;" onclick="vsub()"><i class="fas fa-paper-plane"></i> إرسال الطلب نهائياً</button>
+            <button class="btn btn-gold" style="flex:1;justify-content:center;" onclick="vsub()"><i class="fas fa-paper-plane"></i> إرسال الطلب نهائياً</button>
           </div>
         </div>
       </div>
@@ -531,7 +531,7 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
             <div class="fg"><label class="fl">🕐 الوقت</label><input id="mt" type="text" class="fc" readonly style="background:rgba(255,255,255,.02);cursor:default;"></div>
           </div>
           <div id="me1" class="al al-err" style="display:none;"><i class="fas fa-exclamation-circle"></i><span></span></div>
-          <button id="msub-btn" class="btn btn-teal btn-w" onclick="msub()"><i class="fas fa-paper-plane"></i> إرسال طلب العضوية</button>
+          <button class="btn btn-teal btn-w" onclick="msub()"><i class="fas fa-paper-plane"></i> إرسال طلب العضوية</button>
         </div>
       </div>
     </div>
@@ -596,7 +596,7 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
         <p>Admin Panel — Authorized Access Only</p>
       </div>
       <div class="login-body">
-        <div class="fg"><label class="fl"><i class="fas fa-user"></i> اسم المستخدم</label><input type="text" id="lu" class="fc" placeholder="••••••" autocomplete="off"></div>
+        <div class="fg"><label class="fl"><i class="fas fa-user"></i> اسم المستخدم</label><input type="text" id="lu" class="fc" placeholder="admin" autocomplete="off"></div>
         <div class="fg">
           <label class="fl"><i class="fas fa-lock"></i> كلمة المرور</label>
           <input type="password" id="lp" class="fc" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
@@ -649,6 +649,15 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
     </nav>
 
     <main class="admin-main">
+      <!-- GLOBAL SEARCH BAR -->
+      <div id="admin-global-search-bar" style="padding:.8rem 1.5rem;border-bottom:1px solid var(--brd);background:rgba(6,15,8,.9);position:sticky;top:0;z-index:11;display:flex;gap:10px;align-items:center;">
+        <div style="position:relative;flex:1;max-width:500px;">
+          <i class="fas fa-search" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--g2);font-size:.82rem;pointer-events:none;"></i>
+          <input type="text" id="global-search" class="fc" placeholder="🔍 ابحث بالاسم، رقم الطلب، البريد، المنصب..." oninput="globalSearch()" style="padding-right:36px;font-size:.84rem;">
+        </div>
+        <button class="btn btn-ghost btn-xs" onclick="clearGlobalSearch()" id="global-clear" style="display:none;"><i class="fas fa-times"></i> مسح</button>
+      </div>
+      <div id="global-search-results" style="display:none;"></div>
       <!-- OVERVIEW -->
       <div id="sec-overview" class="a-section act">
         <div class="admin-topbar">
@@ -806,24 +815,20 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
           <option value="rejected">❌ مرفوض</option>
         </select>
       </div>
-      <div class="fg" style="margin-top:.8rem;">
-        <label class="fl"><i class="fas fa-file-pdf" style="color:#e74c3c;margin-left:4px;"></i> إرفاق وثيقة PDF للطلب (اختياري)</label>
-        <p style="font-size:.72rem;color:var(--tx3);margin-bottom:6px;">سيتمكن مقدم الطلب من تحميل هذا الملف عند حالة "مكتمل"</p>
-        <div class="upz" style="padding:1.2rem;" onclick="document.getElementById('admin-pdf-inp').click()">
-          <input type="file" id="admin-pdf-inp" accept=".pdf" style="display:none;" onchange="handleAdminPdf(this)">
-          <div class="upz-icon" style="font-size:1.5rem;">📄</div>
-          <p style="font-size:.82rem;">انقر لاختيار ملف PDF</p>
-          <small>PDF فقط — أقصى حجم 5MB</small>
+      <div class="fg" style="margin-top:.5rem;">
+        <label class="fl"><i class="fas fa-file-pdf" style="color:#e74c3c;margin-left:4px;"></i> إرفاق وثيقة PDF (تظهر لمقدم الطلب عند الاكتمال)</label>
+        <div class="upz" style="padding:1rem;" onclick="document.getElementById('apdf').click()">
+          <input type="file" id="apdf" accept=".pdf" style="display:none;" onchange="onAdminPdf(this)">
+          <div class="upz-icon" style="font-size:1.3rem;margin-bottom:.3rem;">📄</div>
+          <p style="font-size:.8rem;">انقر لاختيار PDF</p><small>PDF فقط — حد أقصى 5MB</small>
         </div>
-        <div id="admin-pdf-preview" style="display:none;margin-top:.6rem;padding:9px 13px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;font-size:.82rem;color:#f1948a;">
-          <i class="fas fa-file-pdf" style="margin-left:6px;"></i>
-          <span id="admin-pdf-name"></span>
-          <button onclick="clearAdminPdf()" style="background:none;border:none;color:#e74c3c;cursor:pointer;margin-right:8px;font-size:.75rem;">✕ إزالة</button>
+        <div id="apdf-new" style="display:none;margin-top:.5rem;padding:8px 12px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;font-size:.8rem;color:#f1948a;display:flex;align-items:center;gap:8px;">
+          <i class="fas fa-file-pdf"></i><span id="apdf-new-name"></span>
+          <button onclick="clearApdf()" style="background:none;border:none;color:#e74c3c;cursor:pointer;margin-right:auto;">✕</button>
         </div>
-        <div id="admin-pdf-existing" style="display:none;margin-top:.6rem;padding:9px 13px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.82rem;color:#58d68d;">
-          <i class="fas fa-check-circle" style="margin-left:6px;"></i> يوجد ملف PDF مرفق مسبقاً
-          <span id="admin-pdf-existing-name" style="color:var(--tx2);font-size:.75rem;margin-right:6px;"></span>
-          <button onclick="removeExistingAdminPdf()" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:.75rem;">✕ حذف الملف</button>
+        <div id="apdf-exist" style="display:none;margin-top:.5rem;padding:8px 12px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.8rem;color:#58d68d;display:flex;align-items:center;gap:8px;">
+          <i class="fas fa-check-circle"></i><span id="apdf-exist-name"></span>
+          <button onclick="removeApdf()" style="background:none;border:none;color:#e74c3c;cursor:pointer;margin-right:auto;">✕ حذف</button>
         </div>
       </div>
     </div>
@@ -1089,6 +1094,7 @@ function hf(inp, prvId, nmId, showImg) {
 }
 
 // ── VERIFICATION FORM ─────────────────────────────────────
+let vsubLock = false;
 function vstep(n) {
   [1,2,3].forEach(i => { document.getElementById('vp'+i).style.display = (i===n?'block':'none'); });
   [1,2,3].forEach(i => {
@@ -1112,14 +1118,13 @@ function vNext() {
 }
 
 async function vsub() {
+  if (vsubLock) return;
   const p1 = document.getElementById('vf1').files[0];
   const p2 = document.getElementById('vf2').files[0];
   const er = document.getElementById('ve2');
   if (!p1||!p2) { er.style.display='flex'; er.querySelector('span').textContent='يرجى رفع جميع المستندات المطلوبة'; return; }
   er.style.display = 'none';
-  // Prevent double submission
-  const subBtn = document.getElementById('vsub-btn');
-  if (subBtn) { subBtn.disabled = true; subBtn.style.opacity = '0.6'; }
+  vsubLock = true;
   showLoad();
 
   const id = uid('VR');
@@ -1140,37 +1145,38 @@ async function vsub() {
     createdAt: new Date().toISOString()
   };
 
+  let fbKey = null;
   try {
-    await FB.add(record);
+    const res = await FB.add(record);
+    fbKey = (res && res.name) ? res.name : null;
+    if (fbKey) record._key = fbKey;
   } catch(e) {
     hideLoad();
-    if (subBtn) { subBtn.disabled = false; subBtn.style.opacity = ''; }
+    vsubLock = false;
     er.style.display = 'flex';
     er.querySelector('span').textContent = 'فشل الإرسال: ' + (e.message || 'تحقق من الإنترنت وحاول مرة أخرى');
     return;
   }
 
-  // Show success immediately — form is submitted
   DB.unshift(record);
   document.getElementById('vsid').textContent = id;
   vstep(3);
   hideLoad();
-  if (subBtn) { subBtn.disabled = false; subBtn.style.opacity = ''; }
+  vsubLock = false;
 
-  // Step 2: Try to upload files silently in background
-  try {
-    const [f1data, f2data] = await Promise.all([
-      processFile(p1, true),
-      processFile(p2, p2.type !== 'application/pdf')
-    ]);
-    if (f1data || f2data) {
-      const key = record._key || id;
-      await FB.update(key, { photo: f1data, linDoc: f2data });
-      record.photo = f1data; record.linDoc = f2data;
+  if (fbKey) {
+    try {
+      const [f1data, f2data] = await Promise.all([
+        processFile(p1, true),
+        processFile(p2, p2.type !== 'application/pdf')
+      ]);
+      if (f1data || f2data) {
+        await FB.update(fbKey, { photo: f1data, linDoc: f2data });
+        record.photo = f1data; record.linDoc = f2data;
+      }
+    } catch(e) {
+      console.warn('File upload background failed:', e);
     }
-  } catch(e) {
-    // Silent fail — form already submitted, files just won't show in admin
-    console.warn('File upload background failed:', e);
   }
 }
 
@@ -1183,7 +1189,9 @@ function vreset() {
 }
 
 // ── MEMBERSHIP FORM ───────────────────────────────────────
+let msubLock = false;
 async function msub() {
+  if (msubLock) return;
   const fields = [['mn','الاسم الكامل'],['mf','اسم العائلة'],['mv','رقم التحقق'],['mr','المنصب المطلوب'],['ma','العنوان'],['me','البريد الإلكتروني']];
   const er = document.getElementById('me1');
   for (const [fid, lbl] of fields) {
@@ -1192,8 +1200,7 @@ async function msub() {
   const email = document.getElementById('me').value.trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { er.style.display='flex'; er.querySelector('span').textContent='يرجى إدخال بريد إلكتروني صحيح'; return; }
   er.style.display = 'none';
-  const msubBtn = document.getElementById('msub-btn');
-  if (msubBtn) { msubBtn.disabled = true; msubBtn.style.opacity = '0.6'; }
+  msubLock = true;
   showLoad();
   try {
     const id = uid('MB');
@@ -1219,11 +1226,7 @@ async function msub() {
   } catch(e) {
     er.style.display = 'flex';
     er.querySelector('span').textContent = 'فشل الإرسال: ' + (e.message || 'تحقق من الإنترنت وحاول مرة أخرى');
-  } finally { 
-    hideLoad(); 
-    const msubBtn2 = document.getElementById('msub-btn');
-    if (msubBtn2) { msubBtn2.disabled = false; msubBtn2.style.opacity = ''; }
-  }
+  } finally { hideLoad(); msubLock = false; }
 }
 
 function mreset() {
@@ -1280,28 +1283,19 @@ async function doTrack() {
 
   const statusDisplay = {
     pending:    { label:'قيد الانتظار',  icon:'⏳', cls:'b-pend', note:'' },
-    processing: { label:'قيد المعالجة',  icon:'🔄', cls:'b-proc', note:'<div style="margin-top:.8rem;padding:9px 13px;background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:.8rem;color:#5dade2;"><i class="fas fa-cog fa-spin"></i> تم استلام طلبك وهو الآن قيد المراجعة والمعالجة — سيتم إعلامك عند اكتماله عبر البريد الإلكتروني</div>' },
-    completed:  { label:'مكتمل ✓',       icon:'✅', cls:'b-done', note:'COMPLETED_NOTE' },
+    processing: { label:'قيد المعالجة',  icon:'🔄', cls:'b-proc', note:'<div style="margin-top:.8rem;padding:9px 13px;background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:.8rem;color:#5dade2;"><i class="fas fa-cog fa-spin"></i> تم استلام طلبك وهو قيد المراجعة — سيتم إبلاغك عبر البريد الإلكتروني عند الانتهاء</div>' },
+    completed:  { label:'مكتمل ✓',       icon:'✅', cls:'b-done', note:'__COMPLETED__' },
     rejected:   { label:'مرفوض',          icon:'❌', cls:'b-rej',  note:'' }
   };
 
   res.innerHTML = found.map((r, i) => {
     const st = statusDisplay[r.status] || statusDisplay.pending;
-    // Build status note
-    let statusNote = st.note;
+    let note = st.note;
     if (r.status === 'completed') {
-      let dlBtn = '';
-      if (r.adminPdf && r.adminPdf.data) {
-        dlBtn = `<div style="margin-top:.7rem;">
-          <a href="${r.adminPdf.data}" download="${esc(r.adminPdf.name||'document.pdf')}" class="btn btn-green btn-sm" style="display:inline-flex;gap:6px;">
-            <i class="fas fa-download"></i> تحميل وثيقة الطلب
-          </a>
-        </div>`;
-      }
-      statusNote = `<div style="margin-top:.8rem;padding:9px 13px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.8rem;color:#58d68d;">
-        <i class="fas fa-check-circle"></i> تم معالجة طلبك واعتماده بنجاح — يرجى مراجعة بريدك الإلكتروني أو تحميل الوثيقة أدناه
-        ${dlBtn}
-      </div>`;
+      const dlBtn = (r.adminPdf && r.adminPdf.data)
+        ? `<div style="margin-top:.6rem;"><a href="${r.adminPdf.data}" download="${esc(r.adminPdf.name||'document.pdf')}" class="btn btn-green btn-sm" style="display:inline-flex;gap:6px;"><i class="fas fa-download"></i> تحميل وثيقة الطلب</a></div>`
+        : '';
+      note = `<div style="margin-top:.8rem;padding:9px 13px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.8rem;color:#58d68d;"><i class="fas fa-check-circle"></i> تمت معالجة طلبك بنجاح — يرجى مراجعة بريدك الإلكتروني أو تحميل الوثيقة أدناه${dlBtn}</div>`;
     }
     return `<div class="rcard" style="animation-delay:${i*.07}s">
       <div class="rcard-top">
@@ -1316,7 +1310,7 @@ async function doTrack() {
         <div><b>الوقت:</b> ${esc(r.time)}</div>
       </div>
       ${r.status==='rejected'&&r.rejectReason?`<div class="rej-note"><i class="fas fa-exclamation-circle"></i> سبب الرفض: ${esc(r.rejectReason)}</div>`:''}
-      ${statusNote}
+      ${note}
     </div>`;
   }).join('');
 }
@@ -1499,17 +1493,6 @@ function viewR(id) {
 
   h += drow2([['التاريخ',esc(r.date)],['الوقت',esc(r.time)]]);
   if (r.rejectReason) h += `<div class="al al-err" style="margin-top:.6rem;"><i class="fas fa-exclamation-circle"></i> سبب الرفض: ${esc(r.rejectReason)}</div>`;
-  // Admin PDF attachment
-  if (r.adminPdf && r.adminPdf.data) {
-    h += `<div class="drow" style="background:rgba(46,204,113,.06);border-color:rgba(46,204,113,.2);margin-top:.6rem;">
-      <label style="color:#58d68d;"><i class="fas fa-file-pdf" style="margin-left:5px;"></i> وثيقة الطلب المرفقة من الإدارة</label>
-      <div class="file-actions" style="margin-top:.4rem;">
-        <span style="font-size:.78rem;color:var(--tx2);">${esc(r.adminPdf.name||'document.pdf')} (${((r.adminPdf.size||0)/1024).toFixed(1)} KB)</span>
-        <a href="${r.adminPdf.data}" download="${esc(r.adminPdf.name||'document.pdf')}" class="btn btn-green btn-xs"><i class="fas fa-download"></i> تحميل</a>
-        <a href="${r.adminPdf.data}" target="_blank" class="btn btn-purple btn-xs"><i class="fas fa-external-link-alt"></i> فتح</a>
-      </div>
-    </div>`;
-  }
 
   document.getElementById('view-body').innerHTML = h;
   oM('ov-view');
@@ -1532,51 +1515,18 @@ function oEdit(id) {
   }
   document.getElementById('edit-f').innerHTML = f;
   document.getElementById('e-st').value = r.status;
-  // Reset PDF upload area
-  document.getElementById('admin-pdf-inp').value = '';
-  document.getElementById('admin-pdf-preview').style.display = 'none';
-  // Show existing PDF if any
-  const existingDiv = document.getElementById('admin-pdf-existing');
+  // Reset admin PDF state
+  _apdfData = null; _apdfRemove = false;
+  document.getElementById('apdf').value = '';
+  document.getElementById('apdf-new').style.display = 'none';
+  const existEl = document.getElementById('apdf-exist');
   if (r.adminPdf && r.adminPdf.data) {
-    existingDiv.style.display = 'block';
-    document.getElementById('admin-pdf-existing-name').textContent = r.adminPdf.name || 'document.pdf';
+    document.getElementById('apdf-exist-name').textContent = r.adminPdf.name || 'document.pdf';
+    existEl.style.cssText = 'display:flex;margin-top:.5rem;padding:8px 12px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.8rem;color:#58d68d;align-items:center;gap:8px;';
   } else {
-    existingDiv.style.display = 'none';
+    existEl.style.display = 'none';
   }
-  window._adminPdfData = null;
-  window._removeExistingPdf = false;
   oM('ov-edit');
-}
-
-function handleAdminPdf(inp) {
-  const f = inp.files[0]; if (!f) return;
-  if (f.type !== 'application/pdf') { alert('يرجى اختيار ملف PDF فقط'); inp.value=''; return; }
-  if (f.size > 5 * 1024 * 1024) { alert('حجم الملف كبير جداً. الحد الأقصى 5MB'); inp.value=''; return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    window._adminPdfData = { data: e.target.result, name: f.name, type: f.type, size: f.size };
-    document.getElementById('admin-pdf-name').textContent = f.name;
-    document.getElementById('admin-pdf-preview').style.display = 'block';
-    document.getElementById('admin-pdf-existing').style.display = 'none';
-    window._removeExistingPdf = true;
-  };
-  reader.readAsDataURL(f);
-}
-
-function clearAdminPdf() {
-  window._adminPdfData = null;
-  document.getElementById('admin-pdf-inp').value = '';
-  document.getElementById('admin-pdf-preview').style.display = 'none';
-  const r = DB.find(x => x.id===curEdId);
-  if (r && r.adminPdf && r.adminPdf.data) {
-    document.getElementById('admin-pdf-existing').style.display = 'block';
-    window._removeExistingPdf = false;
-  }
-}
-
-function removeExistingAdminPdf() {
-  window._removeExistingPdf = true;
-  document.getElementById('admin-pdf-existing').style.display = 'none';
 }
 
 async function saveEd() {
@@ -1595,14 +1545,9 @@ async function saveEd() {
     const a=document.getElementById('ef-a');  if(a){r.address=a.value.trim();updates.address=r.address;}
     const em=document.getElementById('ef-em'); if(em){r.email=em.value.trim();updates.email=r.email;}
   }
-  // Handle admin PDF
-  if (window._adminPdfData) {
-    r.adminPdf = window._adminPdfData;
-    updates.adminPdf = window._adminPdfData;
-  } else if (window._removeExistingPdf) {
-    r.adminPdf = null;
-    updates.adminPdf = null;
-  }
+  // Admin PDF
+  if (_apdfData) { r.adminPdf=_apdfData; updates.adminPdf=_apdfData; }
+  else if (_apdfRemove) { r.adminPdf=null; updates.adminPdf=null; }
   const key = r._key || r.id;
   await FB.update(key, updates);
   cM('ov-edit'); renderAdmin();
@@ -1807,6 +1752,80 @@ function generatePdf() {
   const fileName = `report-${type}-${now.toISOString().split('T')[0]}.pdf`;
   doc.save(fileName);
 }
+
+// ── GLOBAL ADMIN SEARCH ───────────────────────────────────
+function globalSearch() {
+  const q = (document.getElementById('global-search').value||'').trim().toLowerCase();
+  const resDiv = document.getElementById('global-search-results');
+  const clrBtn = document.getElementById('global-clear');
+  if (!q) {
+    resDiv.style.display = 'none';
+    clrBtn.style.display = 'none';
+    document.querySelectorAll('.a-section').forEach(s => s.style.display = '');
+    return;
+  }
+  clrBtn.style.display = '';
+  document.querySelectorAll('.a-section').forEach(s => s.style.display = 'none');
+  resDiv.style.display = 'block';
+  const matches = DB.filter(r =>
+    (r.id||'').toLowerCase().includes(q) ||
+    (r.fullname||'').toLowerCase().includes(q) ||
+    (r.familyName||'').toLowerCase().includes(q) ||
+    (r.email||'').toLowerCase().includes(q) ||
+    (r.position||'').toLowerCase().includes(q) ||
+    (r.reqPosition||'').toLowerCase().includes(q) ||
+    (r.address||'').toLowerCase().includes(q) ||
+    (r.verifNo||'').toLowerCase().includes(q)
+  );
+  if (!matches.length) {
+    resDiv.innerHTML = `<div class="con-w"><div class="empty"><i class="fas fa-search"></i><p>لا توجد نتائج لـ "${esc(q)}"</p></div></div>`;
+    return;
+  }
+  resDiv.innerHTML = `<div class="con-w" style="padding-top:1rem;">
+    <div style="font-size:.78rem;color:var(--tx3);margin-bottom:.8rem;"><i class="fas fa-search" style="margin-left:5px;color:var(--g1);"></i>${matches.length} نتيجة لـ "<span style="color:var(--g2);">${esc(q)}</span>"</div>
+    <div class="card"><div class="card-b" style="padding:0;"><div class="table-wrap"><table>
+    <thead><tr><th>رقم الطلب</th><th>النوع</th><th>الاسم الكامل</th><th>التفاصيل</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+    <tbody>${matches.map(r=>`<tr>
+      <td class="td-id">${esc(r.id)}</td><td>${bTy(r.type)}</td>
+      <td style="font-weight:600;">${esc(r.fullname)}</td>
+      <td style="font-size:.76rem;color:var(--tx2);">${esc(r.type==='verif'?(r.position||''):(r.verifNo||r.email||''))}</td>
+      <td style="font-size:.75rem;color:var(--tx2);">${esc(r.date)}</td>
+      <td>${bSt(r.status)}</td>
+      <td><div class="act-btns">
+        <button class="btn btn-blue btn-xs" onclick="viewR('${esc(r.id)}')"><i class="fas fa-eye"></i></button>
+        <button class="btn btn-xs" style="background:rgba(52,152,219,.2);color:#5dade2;" onclick="setS('${esc(r.id)}','processing')"><i class="fas fa-cog"></i></button>
+        <button class="btn btn-xs" style="background:rgba(46,204,113,.2);color:#58d68d;" onclick="setS('${esc(r.id)}','completed')"><i class="fas fa-check"></i></button>
+        <button class="btn btn-orange btn-xs" onclick="oRej('${esc(r.id)}')"><i class="fas fa-ban"></i></button>
+        <button class="btn btn-xs" style="background:rgba(255,255,255,.07);color:var(--tx);" onclick="oEdit('${esc(r.id)}')"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-red btn-xs" onclick="delR('${esc(r.id)}')"><i class="fas fa-trash-alt"></i></button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div></div></div></div>`;
+}
+function clearGlobalSearch() { document.getElementById('global-search').value=''; globalSearch(); }
+
+// ── ADMIN PDF ─────────────────────────────────────────────
+let _apdfData=null, _apdfRemove=false;
+function onAdminPdf(inp) {
+  const f=inp.files[0]; if(!f) return;
+  if(f.type!=='application/pdf'){alert('PDF فقط');inp.value='';return;}
+  if(f.size>5*1024*1024){alert('الحد الأقصى 5MB');inp.value='';return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    _apdfData={data:e.target.result,name:f.name,type:f.type,size:f.size};
+    document.getElementById('apdf-new-name').textContent=f.name;
+    document.getElementById('apdf-new').style.cssText='display:flex;margin-top:.5rem;padding:8px 12px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);border-radius:8px;font-size:.8rem;color:#f1948a;align-items:center;gap:8px;';
+    document.getElementById('apdf-exist').style.display='none';
+    _apdfRemove=true;
+  };
+  reader.readAsDataURL(f);
+}
+function clearApdf(){
+  _apdfData=null; document.getElementById('apdf').value='';
+  document.getElementById('apdf-new').style.display='none';
+  const r=DB.find(x=>x.id===curEdId);
+  if(r&&r.adminPdf&&r.adminPdf.data){document.getElementById('apdf-exist').style.cssText='display:flex;margin-top:.5rem;padding:8px 12px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.8rem;color:#58d68d;align-items:center;gap:8px;';_apdfRemove=false;}
+}
+function removeApdf(){_apdfRemove=true;document.getElementById('apdf-exist').style.display='none';}
 
 // ── MODAL ─────────────────────────────────────────────────
 function oM(id) { document.getElementById(id).classList.add('open'); }
