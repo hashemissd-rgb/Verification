@@ -1002,41 +1002,59 @@ function doLogin() {
 }
 function doLogout() { nav('home'); }
 
-// ── FILE TO BASE64 (with compression for images) ──────────
-function fileToBase64(file, maxWidthPx = 800, quality = 0.72) {
+// ── FILE COMPRESS & ENCODE (works on all mobile browsers) ─
+function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     if (!file) { resolve(null); return; }
     const isPdf = file.type === 'application/pdf';
 
-    if (isPdf) {
-      // PDFs: read as base64 directly but warn if too large
-      if (file.size > 3 * 1024 * 1024) {
-        reject(new Error('PDF حجمه أكبر من 3MB. يرجى تقليص حجم الملف أولاً.'));
+    // Read file as data URL first (works on ALL devices/browsers)
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('فشل قراءة الملف. حاول مرة أخرى.'));
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+
+      if (isPdf) {
+        // For PDF: store directly but cap size
+        if (file.size > 2 * 1024 * 1024) {
+          reject(new Error('حجم PDF كبير جداً (الحد 2MB). يرجى ضغط الملف أولاً.'));
+          return;
+        }
+        resolve({ data: dataUrl, name: file.name, type: file.type, size: file.size });
         return;
       }
-      const reader = new FileReader();
-      reader.onload = () => resolve({ data: reader.result, name: file.name, type: file.type, size: file.size });
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    } else {
-      // Images: compress via canvas
+
+      // For images: compress using canvas
       const img = new Image();
-      const url = URL.createObjectURL(file);
+      img.onerror = () => reject(new Error('فشل معالجة الصورة. تأكد أنها JPG أو PNG.'));
       img.onload = () => {
-        URL.revokeObjectURL(url);
-        const canvas = document.createElement('canvas');
-        let { width, height } = img;
-        if (width > maxWidthPx) { height = Math.round(height * maxWidthPx / width); width = maxWidthPx; }
-        canvas.width = width; canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        const compressed = canvas.toDataURL('image/jpeg', quality);
-        const approxBytes = Math.round(compressed.length * 0.75);
-        resolve({ data: compressed, name: file.name.replace(/\.[^.]+$/, '.jpg'), type: 'image/jpeg', size: approxBytes });
+        try {
+          const MAX = 700; // max width px — keeps file small for Firebase
+          let w = img.width, h = img.height;
+          if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+          // Minimum size guard
+          if (w < 10 || h < 10) { reject(new Error('الصورة صغيرة جداً.')); return; }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          // Quality 0.65 keeps passport photos under 80KB
+          const compressed = canvas.toDataURL('image/jpeg', 0.65);
+          resolve({
+            data: compressed,
+            name: file.name.replace(/\.[^.]+$/, '') + '.jpg',
+            type: 'image/jpeg',
+            size: Math.round(compressed.length * 0.75)
+          });
+        } catch(err) {
+          reject(new Error('فشل ضغط الصورة: ' + err.message));
+        }
       };
-      img.onerror = reject;
-      img.src = url;
-    }
+      img.src = dataUrl; // use data URL not object URL — safer on mobile
+    };
+    reader.readAsDataURL(file);
   });
 }
 
@@ -1185,34 +1203,54 @@ const SM = {
 const bSt = st => { const s = SM[st]||SM.pending; return `<span class="badge ${s.c}">${s.i} ${s.l}</span>`; };
 const bTy = t => t==='verif' ? `<span class="badge b-vrf">🔐 تحقق</span>` : `<span class="badge b-mem">🪪 عضوية</span>`;
 
-// ── TRACK BY TRACKING NUMBER ──────────────────────────────
+// ── TRACK ─────────────────────────────────────────────────
 async function doTrack() {
-  const q = document.getElementById('tk').value.trim().toUpperCase();
+  const raw = document.getElementById('tk').value.trim();
+  const q = raw.toUpperCase();
   const res = document.getElementById('tk-res');
   const emp = document.getElementById('tk-empty');
   if (!q) { res.innerHTML = ''; emp.style.display = 'none'; return; }
+  res.innerHTML = ''; emp.style.display = 'none';
   showLoad();
-  try {
-    const allData = await FB.getAll();
-    const found = allData.filter(r => r.id && r.id.toUpperCase() === q);
-    emp.style.display = 'none';
-    if (!found.length) { res.innerHTML = ''; emp.style.display = 'block'; return; }
-    res.innerHTML = found.map((r, i) => `
-      <div class="rcard" style="animation-delay:${i*.07}s">
-        <div class="rcard-top">
-          <div style="display:flex;align-items:center;gap:7px;">${bTy(r.type)}<span style="font-family:monospace;color:var(--g1);font-size:.8rem;font-weight:700;">#${esc(r.id)}</span></div>
-          ${bSt(r.status)}
-        </div>
-        <div class="rcard-grid">
-          <div><b>الاسم الكامل:</b> ${esc(r.fullname)}</div>
-          <div><b>${r.type==='verif'?'المنصب:':'اسم العائلة:'}</b> ${esc(r.type==='verif'?r.position:r.familyName)}</div>
-          ${r.type==='memb'?`<div><b>رقم التحقق:</b> ${esc(r.verifNo)}</div><div><b>البريد:</b> <span dir="ltr">${esc(r.email)}</span></div>`:''}
-          <div><b>التاريخ:</b> ${esc(r.date)}</div>
-          <div><b>الوقت:</b> ${esc(r.time)}</div>
-        </div>
-        ${r.status==='rejected'&&r.rejectReason?`<div class="rej-note"><i class="fas fa-exclamation-circle"></i> سبب الرفض: ${esc(r.rejectReason)}</div>`:''}
-      </div>`).join('');
-  } finally { hideLoad(); }
+
+  let allData = [], fetchFailed = false;
+  try { allData = await FB.getAll(); }
+  catch(e) { fetchFailed = true; }
+  finally { hideLoad(); }
+
+  if (fetchFailed) {
+    res.innerHTML = `<div class="al al-err"><i class="fas fa-wifi"></i><span>تعذّر الاتصال. تحقق من الإنترنت وأعد المحاولة.</span></div>`;
+    return;
+  }
+
+  const found = allData.filter(r => r.id && r.id.toUpperCase().includes(q));
+  if (!found.length) { emp.style.display = 'block'; return; }
+
+  const statusDisplay = {
+    pending:    { label:'قيد الانتظار',  icon:'⏳', cls:'b-pend', note:'' },
+    processing: { label:'قيد المعالجة',  icon:'🔄', cls:'b-proc', note:'<div style="margin-top:.8rem;padding:9px 13px;background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.2);border-radius:8px;font-size:.8rem;color:#5dade2;"><i class="fas fa-cog fa-spin"></i> طلبك قيد المراجعة والمعالجة من قبل الفريق المختص</div>' },
+    completed:  { label:'مكتمل ✓',       icon:'✅', cls:'b-done', note:'<div style="margin-top:.8rem;padding:9px 13px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:.8rem;color:#58d68d;"><i class="fas fa-check-circle"></i> تم قبول طلبك واعتماده بنجاح</div>' },
+    rejected:   { label:'مرفوض',          icon:'❌', cls:'b-rej',  note:'' }
+  };
+
+  res.innerHTML = found.map((r, i) => {
+    const st = statusDisplay[r.status] || statusDisplay.pending;
+    return `<div class="rcard" style="animation-delay:${i*.07}s">
+      <div class="rcard-top">
+        <div style="display:flex;align-items:center;gap:7px;">${bTy(r.type)}<span style="font-family:monospace;color:var(--g1);font-size:.8rem;font-weight:700;">${esc(r.id)}</span></div>
+        <span class="badge ${st.cls}">${st.icon} ${st.label}</span>
+      </div>
+      <div class="rcard-grid">
+        <div><b>الاسم الكامل:</b> ${esc(r.fullname)}</div>
+        <div><b>${r.type==='verif'?'المنصب:':'اسم العائلة:'}</b> ${esc(r.type==='verif'?r.position:r.familyName)}</div>
+        ${r.type==='memb'?`<div><b>رقم التحقق:</b> ${esc(r.verifNo)}</div><div><b>البريد:</b> <span dir="ltr">${esc(r.email)}</span></div>`:''}
+        <div><b>التاريخ:</b> ${esc(r.date)}</div>
+        <div><b>الوقت:</b> ${esc(r.time)}</div>
+      </div>
+      ${r.status==='rejected'&&r.rejectReason?`<div class="rej-note"><i class="fas fa-exclamation-circle"></i> سبب الرفض: ${esc(r.rejectReason)}</div>`:''}
+      ${st.note}
+    </div>`;
+  }).join('');
 }
 
 // ── ADMIN RENDER ──────────────────────────────────────────
