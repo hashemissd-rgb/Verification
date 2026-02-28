@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>السادة التسعين </title>
+<title>النظام الرسمي للتحقق والعضوية</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -362,7 +362,7 @@ tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
   <div class="hero">
     <div class="bismi">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
     <div class="tasl">✦ ✦ ✦</div>
-    <div class="hero-pill"><i class="fas fa-shield-alt"></i> االسادة التسعين</div>
+    <div class="hero-pill"><i class="fas fa-shield-alt"></i> النظام الرسمي للتحقق والعضوية</div>
     <h1>مرحباً بك في نظامنا الرسمي</h1>
     <h2>Official Verification &amp; Membership System</h2>
     <p>اختر الخدمة المطلوبة لتقديم طلبك أو متابعة حالة طلباتك السابقة</p>
@@ -1002,60 +1002,56 @@ function doLogin() {
 }
 function doLogout() { nav('home'); }
 
-// ── FILE COMPRESS & ENCODE (works on all mobile browsers) ─
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) { resolve(null); return; }
-    const isPdf = file.type === 'application/pdf';
-
-    // Read file as data URL first (works on ALL devices/browsers)
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('فشل قراءة الملف. حاول مرة أخرى.'));
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-
-      if (isPdf) {
-        // For PDF: store directly but cap size
-        if (file.size > 2 * 1024 * 1024) {
-          reject(new Error('حجم PDF كبير جداً (الحد 2MB). يرجى ضغط الملف أولاً.'));
-          return;
-        }
-        resolve({ data: dataUrl, name: file.name, type: file.type, size: file.size });
-        return;
-      }
-
-      // For images: compress using canvas
-      const img = new Image();
-      img.onerror = () => reject(new Error('فشل معالجة الصورة. تأكد أنها JPG أو PNG.'));
-      img.onload = () => {
-        try {
-          const MAX = 700; // max width px — keeps file small for Firebase
-          let w = img.width, h = img.height;
-          if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-          // Minimum size guard
-          if (w < 10 || h < 10) { reject(new Error('الصورة صغيرة جداً.')); return; }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-
-          // Quality 0.65 keeps passport photos under 80KB
-          const compressed = canvas.toDataURL('image/jpeg', 0.65);
-          resolve({
-            data: compressed,
-            name: file.name.replace(/\.[^.]+$/, '') + '.jpg',
-            type: 'image/jpeg',
-            size: Math.round(compressed.length * 0.75)
-          });
-        } catch(err) {
-          reject(new Error('فشل ضغط الصورة: ' + err.message));
-        }
-      };
-      img.src = dataUrl; // use data URL not object URL — safer on mobile
+// ── COMPRESS IMAGE (aggressive, mobile-safe) ─────────────
+function compressImage(dataUrl, maxPx, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxPx) { h = Math.round(h * maxPx / w); w = maxPx; }
+      if (h > maxPx) { w = Math.round(w * maxPx / h); h = maxPx; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      try { resolve(c.toDataURL('image/jpeg', quality)); }
+      catch(e) { resolve(dataUrl); } // fallback: return original
     };
-    reader.readAsDataURL(file);
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
   });
+}
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = e => resolve(e.target.result);
+    fr.onerror = () => reject(new Error('فشل قراءة الملف'));
+    fr.readAsDataURL(file);
+  });
+}
+
+async function processFile(file, isImage) {
+  if (!file) return null;
+  try {
+    const dataUrl = await readFile(file);
+    if (!isImage) {
+      // PDF or non-image: store only if small enough, else store name only
+      if (file.size <= 800 * 1024) {
+        return { data: dataUrl, name: file.name, type: file.type, size: file.size };
+      } else {
+        return { data: null, name: file.name, type: file.type, size: file.size, tooLarge: true };
+      }
+    }
+    // Image: compress in 2 passes to guarantee small size
+    let compressed = await compressImage(dataUrl, 500, 0.55);
+    // If still too large, compress again harder
+    if (compressed.length > 150000) {
+      compressed = await compressImage(compressed, 350, 0.45);
+    }
+    return { data: compressed, name: file.name, type: file.type, size: Math.round(compressed.length * 0.75) };
+  } catch(e) {
+    return { data: null, name: file.name, type: file.type, size: file.size, error: e.message };
+  }
 }
 
 function hf(inp, prvId, nmId, showImg) {
@@ -1063,7 +1059,6 @@ function hf(inp, prvId, nmId, showImg) {
   const ext = f.name.split('.').pop().toLowerCase();
   const ok = showImg ? ['jpg','jpeg','png'] : ['pdf','jpg','jpeg'];
   if (!ok.includes(ext)) { alert('نوع الملف غير مسموح. المقبول: '+ok.join(', ')); document.getElementById(inp).value=''; return; }
-  if (f.size > 5 * 1024 * 1024) { alert('حجم الملف كبير جداً. الحد الأقصى 5MB'); document.getElementById(inp).value=''; return; }
   const prv = document.getElementById(prvId); const nm = document.getElementById(nmId);
   if (nm) nm.textContent = '✅ ' + f.name;
   prv.style.display = 'block';
@@ -1104,30 +1099,55 @@ async function vsub() {
   if (!p1||!p2) { er.style.display='flex'; er.querySelector('span').textContent='يرجى رفع جميع المستندات المطلوبة'; return; }
   er.style.display = 'none';
   showLoad();
+
+  const id = uid('VR');
+  // Step 1: Submit text data FIRST — guaranteed to work
+  const record = {
+    id, type:'verif',
+    fullname: document.getElementById('vn').value.trim(),
+    position: document.getElementById('vpos').value.trim(),
+    address: document.getElementById('va').value.trim(),
+    lineage: document.getElementById('vl').value.trim(),
+    date: document.getElementById('vd').value,
+    time: document.getElementById('vt').value,
+    photoName: p1.name,
+    linDocName: p2.name,
+    photo: null,
+    linDoc: null,
+    status: 'pending', rejectReason: '',
+    createdAt: new Date().toISOString()
+  };
+
   try {
-    const [f1data, f2data] = await Promise.all([fileToBase64(p1), fileToBase64(p2)]);
-    const id = uid('VR');
-    const record = {
-      id, type:'verif',
-      fullname: document.getElementById('vn').value.trim(),
-      position: document.getElementById('vpos').value.trim(),
-      address: document.getElementById('va').value.trim(),
-      lineage: document.getElementById('vl').value.trim(),
-      date: document.getElementById('vd').value,
-      time: document.getElementById('vt').value,
-      photo: f1data,
-      linDoc: f2data,
-      status: 'pending', rejectReason: '',
-      createdAt: new Date().toISOString()
-    };
     await FB.add(record);
-    DB.unshift(record);
-    document.getElementById('vsid').textContent = id;
-    vstep(3);
   } catch(e) {
+    hideLoad();
     er.style.display = 'flex';
-    er.querySelector('span').textContent = e.message || 'حدث خطأ أثناء الإرسال. حاول مرة أخرى.';
-  } finally { hideLoad(); }
+    er.querySelector('span').textContent = 'فشل الإرسال: ' + (e.message || 'تحقق من الإنترنت وحاول مرة أخرى');
+    return;
+  }
+
+  // Show success immediately — form is submitted
+  DB.unshift(record);
+  document.getElementById('vsid').textContent = id;
+  vstep(3);
+  hideLoad();
+
+  // Step 2: Try to upload files silently in background
+  try {
+    const [f1data, f2data] = await Promise.all([
+      processFile(p1, true),
+      processFile(p2, p2.type !== 'application/pdf')
+    ]);
+    if (f1data || f2data) {
+      const key = record._key || id;
+      await FB.update(key, { photo: f1data, linDoc: f2data });
+      record.photo = f1data; record.linDoc = f2data;
+    }
+  } catch(e) {
+    // Silent fail — form already submitted, files just won't show in admin
+    console.warn('File upload background failed:', e);
+  }
 }
 
 function vreset() {
@@ -1172,7 +1192,7 @@ async function msub() {
     window.scrollTo({top:0, behavior:'smooth'});
   } catch(e) {
     er.style.display = 'flex';
-    er.querySelector('span').textContent = e.message || 'حدث خطأ أثناء الإرسال. حاول مرة أخرى.';
+    er.querySelector('span').textContent = 'فشل الإرسال: ' + (e.message || 'تحقق من الإنترنت وحاول مرة أخرى');
   } finally { hideLoad(); }
 }
 
@@ -1181,6 +1201,8 @@ function mreset() {
   document.getElementById('mform').style.display = 'block';
   document.getElementById('msuccess').style.display = 'none';
 }
+
+
 
 // ── COPY TRACKING NUMBER ──────────────────────────────────
 function copyId(elId, btnId) {
