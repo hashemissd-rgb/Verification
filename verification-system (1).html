@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="النظام الرسمي للتحقق والعضوية">
+<title>النظام الرسمي للتحقق والعضوية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════ VARIABLES ═══════════════════ */
+:root{
+  --em:#0b1e11;   /* emerald dark */
+  --em2:#0f2916;
+  --em3:#173b21;
+  --g1:#c9a84c;   /* gold */
+  --g2:#e8c96a;
+  --g3:#9a7930;
+  --g4:#f5dfa0;
+  --wh:#fff;
+  --tx:rgba(255,255,255,.88);
+  --tx2:rgba(255,255,255,.55);
+  --tx3:rgba(255,255,255,.3);
+  --brd:rgba(201,168,76,.18);
+  --brd2:rgba(201,168,76,.35);
+  --card:rgba(255,255,255,.038);
+  --card2:rgba(255,255,255,.065);
+  --R:14px;
+  --sh:0 8px 32px rgba(0,0,0,.35);
+  --sh2:0 20px 60px rgba(0,0,0,.5);
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+
+/* ═══════════════════ RESET ═══════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--em);
+  color:var(--wh);
+  min-height:100vh;
+  direction:rtl;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ═══════════════════ ISLAMIC GEOMETRIC BACKGROUND ═══════════════════ */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 10%,rgba(26,107,60,.5) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 80% at 90% 90%,rgba(13,60,30,.7) 0%,transparent 70%),
+    radial-gradient(ellipse 100% 100% at 50% 50%,rgba(15,41,22,.9) 0%,transparent 100%),
+    var(--em);
+  pointer-events:none;
+}
+/* SVG geometric tile overlay */
+body::after{
+  content:'';
+  position:fixed;inset:0;z-index:0;
+  opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cdefs%3E%3Cpattern id='g' x='0' y='0' width='120' height='120' patternUnits='userSpaceOnUse'%3E%3C!-- outer 8-pointed star --%3E%3Cpath d='M60 8 L68 38 L98 30 L76 52 L98 74 L68 66 L60 96 L52 66 L22 74 L44 52 L22 30 L52 38 Z' fill='none' stroke='%23c9a84c' stroke-width='1.2'/%3E%3C!-- inner octagon --%3E%3Cpath d='M60 28 L70 38 L80 38 L80 52 L70 62 L60 62 L50 52 L50 38 Z' fill='none' stroke='%23c9a84c' stroke-width='.7' opacity='.6'/%3E%3C!-- corner diamonds --%3E%3Cpath d='M0 0 L10 12 L0 24 L-10 12 Z' fill='none' stroke='%23c9a84c' stroke-width='.6' opacity='.4'/%3E%3Cpath d='M120 0 L130 12 L120 24 L110 12 Z' fill='none' stroke='%23c9a84c' stroke-width='.6' opacity='.4'/%3E%3Cpath d='M0 120 L10 108 L0 96 L-10 108 Z' fill='none' stroke='%23c9a84c' stroke-width='.6' opacity='.4'/%3E%3Cpath d='M120 120 L130 108 L120 96 L110 108 Z' fill='none' stroke='%23c9a84c' stroke-width='.6' opacity='.4'/%3E%3C!-- cross lines --%3E%3Cline x1='60' y1='0' x2='60' y2='28' stroke='%23c9a84c' stroke-width='.5' opacity='.35'/%3E%3Cline x1='60' y1='62' x2='60' y2='120' stroke='%23c9a84c' stroke-width='.5' opacity='.35'/%3E%3Cline x1='0' y1='60' x2='28' y2='60' stroke='%23c9a84c' stroke-width='.5' opacity='.35'/%3E%3Cline x1='80' y1='60' x2='120' y2='60' stroke='%23c9a84c' stroke-width='.5' opacity='.35'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23g)'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+
+/* ═══════════════════ PAGES ═══════════════════ */
+#root{position:relative;z-index:1;min-height:100vh;}
+.view{
+  display:none;
+  min-height:100vh;
+  flex-direction:column;
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .38s var(--ease),transform .38s var(--ease);
+  will-change:opacity,transform;
+}
+.view.show{
+  display:flex;
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ═══════════════════ HEADER ═══════════════════ */
+.hdr{
+  background:linear-gradient(135deg,rgba(11,30,17,.96),rgba(15,41,22,.98));
+  border-bottom:1.5px solid var(--g1);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:66px;
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(20px);
+  box-shadow:0 2px 20px rgba(0,0,0,.4),0 1px 0 rgba(201,168,76,.12);
+  transition:background .3s;
+}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-mark{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--g2),var(--g3));
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.25rem;
+  box-shadow:0 3px 12px rgba(201,168,76,.28),inset 0 1px 0 rgba(255,255,255,.15);
+  flex-shrink:0;
+}
+.logo-text{line-height:1.25;}
+.logo-text h1{font-size:.92rem;font-weight:800;color:var(--wh);}
+.logo-text span{font-size:.62rem;color:var(--g2);letter-spacing:.5px;}
+.hdr-right{display:flex;gap:8px;align-items:center;}
+
+/* ═══════════════════ BUTTONS ═══════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;
+  border:none;cursor:pointer;
+  border-radius:9px;
+  font-family:'Cairo',sans-serif;
+  font-size:.84rem;font-weight:700;
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),background .2s,opacity .2s;
+  text-decoration:none;white-space:nowrap;
+  position:relative;overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,.08);
+  opacity:0;transition:opacity .2s;
+  border-radius:inherit;
+}
+.btn:hover::after{opacity:1;}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn-gold{
+  background:linear-gradient(135deg,var(--g2),var(--g3));
+  color:#120d00;
+  box-shadow:0 4px 14px rgba(201,168,76,.25);
+}
+.btn-gold:hover{box-shadow:0 6px 20px rgba(201,168,76,.4);}
+.btn-green{
+  background:linear-gradient(135deg,#2ecc71,#1a8a4a);
+  color:var(--wh);
+  box-shadow:0 4px 14px rgba(26,138,74,.28);
+}
+.btn-teal{
+  background:linear-gradient(135deg,#1abc9c,#148f77);
+  color:var(--wh);
+  box-shadow:0 4px 14px rgba(26,188,156,.25);
+}
+.btn-outline{
+  background:transparent;
+  color:var(--g1);
+  border:1.5px solid var(--g1);
+}
+.btn-outline:hover{background:var(--g1);color:#120d00;}
+.btn-ghost{
+  background:rgba(255,255,255,.06);
+  color:var(--tx);
+  border:1px solid rgba(255,255,255,.1);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.1);}
+.btn-red{background:linear-gradient(135deg,#e74c3c,#a93226);color:var(--wh);}
+.btn-blue{background:linear-gradient(135deg,#3498db,#1f6fa3);color:var(--wh);}
+.btn-orange{background:linear-gradient(135deg,#f39c12,#b7770d);color:var(--wh);}
+.btn-sm{padding:5px 12px;font-size:.76rem;border-radius:7px;}
+.btn-xs{padding:4px 9px;font-size:.72rem;border-radius:6px;}
+.btn-w{width:100%;justify-content:center;}
+
+/* ═══════════════════ HERO ═══════════════════ */
+.hero{
+  padding:3.5rem 2rem 3rem;
+  text-align:center;
+  position:relative;
+}
+/* gold shimmer line at top */
+.hero::before{
+  content:'';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:200px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--g1),transparent);
+  border-radius:2px;
+}
+.bismi{
+  font-family:'Amiri',serif;
+  font-size:2.1rem;color:var(--g1);
+  text-shadow:0 0 30px rgba(201,168,76,.35);
+  margin-bottom:.4rem;
+  animation:fadeUp .7s var(--ease) both;
+}
+.tasl{color:var(--g2);opacity:.4;letter-spacing:12px;font-size:.9rem;margin:.5rem 0 1.4rem;animation:fadeUp .7s .1s var(--ease) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 16px;
+  background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.28);
+  border-radius:50px;
+  color:var(--g2);font-size:.75rem;
+  margin-bottom:1.1rem;
+  animation:fadeUp .7s .15s var(--ease) both;
+}
+.hero h1{
+  font-family:'Amiri',serif;
+  font-size:clamp(1.9rem,4.5vw,3rem);
+  color:var(--wh);margin-bottom:.3rem;
+  text-shadow:0 2px 20px rgba(201,168,76,.2);
+  animation:fadeUp .7s .2s var(--ease) both;
+}
+.hero h2{font-size:clamp(.85rem,2vw,1.1rem);color:var(--g2);font-weight:400;margin-bottom:1rem;animation:fadeUp .7s .25s var(--ease) both;}
+.hero p{color:var(--tx2);max-width:500px;margin:0 auto 2rem;line-height:2;font-size:.88rem;animation:fadeUp .7s .3s var(--ease) both;}
+
+/* ═══════════════════ SERVICE CARDS ═══════════════════ */
+.svc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.2rem;
+  animation:fadeUp .7s .35s var(--ease) both;
+}
+.svc{
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:var(--R);
+  padding:2rem 1.5rem;
+  text-align:center;
+  cursor:pointer;
+  transition:transform .3s var(--ease),border-color .3s,background .3s,box-shadow .3s;
+  position:relative;overflow:hidden;
+}
+.svc::before{
+  content:'';position:absolute;
+  top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:radial-gradient(circle at center,rgba(201,168,76,.07),transparent 60%);
+  opacity:0;transition:opacity .4s;
+}
+.svc:hover::before{opacity:1;}
+.svc:hover{
+  transform:translateY(-6px);
+  border-color:var(--brd2);
+  background:var(--card2);
+  box-shadow:0 12px 40px rgba(0,0,0,.3),0 0 0 1px rgba(201,168,76,.12);
+}
+.svc-icon{
+  width:64px;height:64px;margin:0 auto .9rem;
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.7rem;
+}
+.svc-icon.gold{background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.08));border:1px solid rgba(201,168,76,.25);}
+.svc-icon.teal{background:linear-gradient(135deg,rgba(26,188,156,.2),rgba(26,188,156,.08));border:1px solid rgba(26,188,156,.22);}
+.svc-icon.blue{background:linear-gradient(135deg,rgba(52,152,219,.2),rgba(52,152,219,.08));border:1px solid rgba(52,152,219,.22);}
+.svc h3{color:var(--g2);font-size:1.05rem;margin-bottom:.5rem;font-weight:700;}
+.svc p{color:var(--tx2);font-size:.82rem;line-height:1.8;}
+
+/* ═══════════════════ CONTAINER ═══════════════════ */
+.con{max-width:860px;margin:0 auto;padding:2rem 1.4rem;}
+.con-w{max-width:1200px;margin:0 auto;padding:1.6rem 1.4rem;}
+
+/* ═══════════════════ CARD ═══════════════════ */
+.card{
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:var(--R);
+  overflow:hidden;
+}
+.card-hd{
+  padding:1rem 1.3rem;
+  background:linear-gradient(135deg,rgba(26,107,60,.28),rgba(13,74,40,.38));
+  border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:10px;
+}
+.card-hd .cic{
+  width:34px;height:34px;border-radius:9px;
+  background:rgba(201,168,76,.14);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--g1);font-size:.9rem;
+  flex-shrink:0;
+}
+.card-hd h3{color:var(--wh);font-size:.9rem;font-weight:700;line-height:1.3;}
+.card-hd span{font-size:.66rem;color:var(--g2);}
+.card-b{padding:1.3rem;}
+
+/* ═══════════════════ FORM ═══════════════════ */
+.fg{margin-bottom:1.1rem;}
+.fl{display:block;color:var(--g2);font-size:.8rem;font-weight:700;margin-bottom:5px;}
+.rq{color:#e74c3c;margin-right:3px;}
+.fc{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.055);
+  border:1.5px solid rgba(201,168,76,.2);
+  border-radius:9px;
+  color:var(--wh);
+  font-family:'Cairo',sans-serif;font-size:.875rem;
+  transition:border-color .22s,background .22s,box-shadow .22s;
+  outline:none;
+}
+.fc:focus{
+  border-color:var(--g1);
+  background:rgba(255,255,255,.085);
+  box-shadow:0 0 0 3px rgba(201,168,76,.1);
+}
+.fc::placeholder{color:var(--tx3);}
+textarea.fc{resize:vertical;min-height:290px;line-height:2.1;}
+select.fc option{background:#0f2916;color:var(--wh);}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+@media(max-width:580px){.fr2,.fr3{grid-template-columns:1fr;}}
+
+/* ═══════════════════ STEPS ═══════════════════ */
+.steps{display:flex;align-items:center;justify-content:center;margin:1.5rem 0 2rem;}
+.step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;max-width:140px;}
+.snum{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.82rem;
+  transition:background .3s,color .3s,box-shadow .3s,transform .3s var(--ease);
+  background:rgba(255,255,255,.07);
+  color:var(--tx3);border:2px solid rgba(255,255,255,.1);
+}
+.step.on .snum{
+  background:linear-gradient(135deg,var(--g2),var(--g3));
+  color:#120d00;border-color:transparent;
+  box-shadow:0 4px 16px rgba(201,168,76,.35);
+  transform:scale(1.1);
+}
+.step.ok .snum{
+  background:linear-gradient(135deg,#2ecc71,#1a8a4a);
+  color:var(--wh);border-color:transparent;
+}
+.slabel{font-size:.67rem;color:var(--tx3);text-align:center;}
+.step.on .slabel{color:var(--g2);}
+.step.ok .slabel{color:rgba(255,255,255,.62);}
+.sbar{flex:1;height:2px;background:rgba(255,255,255,.07);max-width:55px;margin-top:-20px;transition:background .4s;}
+.sbar.ok{background:linear-gradient(90deg,#2ecc71,#1a8a4a);}
+
+/* ═══════════════════ ALERTS ═══════════════════ */
+.al{padding:10px 14px;border-radius:9px;font-size:.82rem;display:flex;align-items:flex-start;gap:8px;margin-bottom:.9rem;animation:fadeUp .3s var(--ease);}
+.al-err{background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.24);color:#f1948a;}
+.al-ok{background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.24);color:#82e0aa;}
+
+/* ═══════════════════ BADGES ═══════════════════ */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:50px;font-size:.7rem;font-weight:800;}
+.b-pend{background:rgba(243,156,18,.14);color:#f5b041;border:1px solid rgba(243,156,18,.25);}
+.b-proc{background:rgba(52,152,219,.14);color:#5dade2;border:1px solid rgba(52,152,219,.25);}
+.b-done{background:rgba(46,204,113,.14);color:#58d68d;border:1px solid rgba(46,204,113,.25);}
+.b-rej {background:rgba(231,76,60,.14);color:#ec7063;border:1px solid rgba(231,76,60,.25);}
+.b-vrf {background:rgba(155,89,182,.14);color:#c39bd3;border:1px solid rgba(155,89,182,.25);}
+.b-mem {background:rgba(26,188,156,.14);color:#76d7c4;border:1px solid rgba(26,188,156,.25);}
+
+/* ═══════════════════ TRACK PAGE ═══════════════════ */
+.search-hero{
+  background:linear-gradient(135deg,rgba(26,107,60,.25),rgba(201,168,76,.08));
+  border:1px solid var(--brd);
+  border-radius:18px;
+  padding:2.5rem 2rem;
+  text-align:center;
+  margin-bottom:2rem;
+}
+.search-hero h2{font-family:'Amiri',serif;font-size:1.7rem;margin-bottom:.4rem;}
+.search-hero p{color:var(--tx2);font-size:.85rem;margin-bottom:1.5rem;}
+.search-box{
+  display:flex;gap:10px;max-width:500px;margin:0 auto;
+}
+.search-box .fc{flex:1;font-size:.95rem;}
+
+/* result card */
+.rcard{
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:13px;
+  padding:1.2rem 1.3rem;
+  margin-bottom:.9rem;
+  transition:border-color .25s,transform .25s var(--ease);
+  animation:fadeUp .35s var(--ease) both;
+}
+.rcard:hover{border-color:var(--brd2);transform:translateX(-3px);}
+.rcard-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;margin-bottom:.8rem;}
+.rcard-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.82rem;color:var(--tx2);}
+.rcard-grid b{color:var(--tx);}
+.rej-note{
+  margin-top:.8rem;padding:9px 13px;
+  background:rgba(231,76,60,.1);
+  border:1px solid rgba(231,76,60,.22);
+  border-radius:8px;font-size:.8rem;color:#ec7063;
+}
+
+/* ═══════════════════ UPLOAD ═══════════════════ */
+.upz{
+  border:2px dashed rgba(201,168,76,.28);
+  border-radius:12px;padding:1.8rem;text-align:center;
+  cursor:pointer;
+  transition:border-color .25s,background .25s;
+  background:rgba(201,168,76,.025);
+  position:relative;
+}
+.upz:hover{border-color:var(--g1);background:rgba(201,168,76,.06);}
+.upz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upz-icon{font-size:2rem;color:var(--g1);margin-bottom:.6rem;}
+.upz p{color:var(--tx2);font-size:.86rem;}
+.upz small{color:var(--tx3);font-size:.73rem;}
+.uprev{display:none;margin-top:.8rem;}
+.uprev img{max-width:110px;border-radius:8px;border:2px solid var(--g1);}
+
+/* success card */
+.success-card{
+  text-align:center;padding:3rem 2rem;
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:var(--R);
+  animation:fadeUp .4s var(--ease);
+}
+.success-id{
+  display:inline-block;
+  padding:.6rem 1.5rem;
+  background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.22);
+  border-radius:10px;
+  font-size:1.3rem;font-weight:900;color:var(--g1);
+  letter-spacing:2px;margin:.8rem 0 .5rem;
+  font-family:monospace;
+}
+
+/* ═══════════════════ LOGIN ═══════════════════ */
+.login-wrap{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:2rem;
+}
+.login-box{
+  width:100%;max-width:380px;
+  background:rgba(15,41,22,.9);
+  backdrop-filter:blur(30px);
+  border:1px solid var(--brd);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--sh2);
+}
+.login-head{
+  padding:2rem;text-align:center;
+  background:linear-gradient(135deg,rgba(26,107,60,.4),rgba(13,74,40,.5));
+  border-bottom:1px solid var(--brd);
+}
+.login-head .moon{
+  width:60px;height:60px;margin:0 auto .8rem;
+  background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));
+  border:1.5px solid rgba(201,168,76,.3);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;
+}
+.login-head h2{font-size:1.25rem;color:var(--wh);}
+.login-head p{font-size:.72rem;color:var(--g2);margin-top:3px;}
+.login-body{padding:1.5rem;}
+
+/* ═══════════════════ ADMIN PANEL ═══════════════════ */
+#view-admin{background:var(--em);}
+
+.admin-layout{display:flex;height:calc(100vh - 66px);overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{
+  width:240px;flex-shrink:0;
+  background:rgba(10,25,14,.95);
+  border-left:1px solid var(--brd);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+  transition:width .3s var(--ease);
+}
+.sb-logo{
+  padding:1.2rem 1rem;
+  border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-logo .dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--g1);
+  box-shadow:0 0 8px rgba(201,168,76,.6);
+  flex-shrink:0;
+}
+.sb-logo span{font-size:.8rem;font-weight:700;color:var(--g2);}
+.sb-nav{padding:.8rem 0;flex:1;}
+.sb-section{
+  padding:.4rem 1rem .2rem;
+  font-size:.62rem;font-weight:800;
+  color:var(--tx3);letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:.65rem 1.1rem;
+  cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s;
+  color:var(--tx2);font-size:.82rem;font-weight:600;
+  border-right:3px solid transparent;
+  margin-bottom:2px;
+}
+.sb-item i{width:18px;text-align:center;font-size:.88rem;flex-shrink:0;}
+.sb-item:hover{background:rgba(201,168,76,.07);color:var(--wh);}
+.sb-item.act{
+  background:rgba(201,168,76,.1);
+  color:var(--g2);
+  border-right-color:var(--g1);
+}
+.sb-badge{
+  margin-right:auto;
+  min-width:20px;height:20px;
+  padding:0 6px;
+  background:rgba(201,168,76,.2);
+  color:var(--g2);
+  border-radius:50px;
+  font-size:.67rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.sb-bottom{
+  padding:1rem;
+  border-top:1px solid var(--brd);
+}
+
+/* MAIN CONTENT */
+.admin-main{
+  flex:1;overflow-y:auto;
+  background:rgba(0,0,0,.1);
+}
+.admin-topbar{
+  padding:.9rem 1.5rem;
+  border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  background:rgba(10,25,14,.7);
+  backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:10;
+}
+.admin-topbar h2{font-size:1rem;font-weight:800;color:var(--wh);}
+.admin-topbar p{font-size:.72rem;color:var(--tx3);margin-top:1px;}
+
+/* ADMIN SECTIONS */
+.a-section{display:none;}
+.a-section.act{display:block;animation:fadeUp .3s var(--ease);}
+
+/* STATS GRID */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1rem;
+  margin-bottom:1.5rem;
+}
+.stat-card{
+  background:var(--card);
+  border:1px solid var(--brd);
+  border-radius:13px;padding:1.1rem 1rem;
+  transition:transform .25s var(--ease),border-color .25s,box-shadow .25s;
+  cursor:default;
+}
+.stat-card:hover{transform:translateY(-3px);border-color:var(--brd2);box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.stat-icon-wrap{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;margin-bottom:.7rem;
+}
+.stat-num{font-size:1.9rem;font-weight:900;line-height:1;margin-bottom:3px;}
+.stat-label{font-size:.73rem;color:var(--tx2);}
+.stat-sub{font-size:.65rem;color:var(--tx3);margin-top:2px;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:var(--R);}
+table{width:100%;border-collapse:collapse;font-size:.81rem;}
+thead tr{
+  background:linear-gradient(135deg,rgba(26,107,60,.32),rgba(13,74,40,.42));
+  border-bottom:2px solid rgba(201,168,76,.22);
+}
+thead th{
+  padding:11px 13px;color:var(--g2);
+  font-weight:800;text-align:right;
+  white-space:nowrap;font-size:.75rem;letter-spacing:.3px;
+}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .18s;}
+tbody tr:hover{background:rgba(255,255,255,.03);}
+tbody td{padding:10px 13px;color:var(--tx);vertical-align:middle;}
+.td-id{font-family:monospace;color:var(--g1);font-size:.75rem;font-weight:700;}
+
+/* ACTION BUTTONS in table */
+.act-btns{display:flex;gap:4px;flex-wrap:nowrap;}
+
+/* SEARCH / FILTER BAR */
+.filter-bar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-bottom:1.2rem;
+}
+.filter-bar .fc{max-width:280px;flex:1;}
+.chip-grp{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{
+  padding:5px 13px;border-radius:50px;
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,255,255,.08);
+  color:var(--tx2);cursor:pointer;
+  font-family:'Cairo',sans-serif;font-size:.75rem;font-weight:700;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.chip:hover,.chip.on{
+  background:rgba(201,168,76,.12);
+  border-color:rgba(201,168,76,.32);
+  color:var(--g2);
+}
+
+/* EMPTY */
+.empty{text-align:center;padding:3rem;color:var(--tx3);}
+.empty i{font-size:2.5rem;margin-bottom:.8rem;color:rgba(201,168,76,.14);display:block;}
+
+/* ═══════════════════ MODAL ═══════════════════ */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.7);
+  z-index:999;
+  align-items:center;justify-content:center;
+  padding:1rem;
+  backdrop-filter:blur(6px);
+}
+.overlay.open{display:flex;animation:fadeIn .2s var(--ease);}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:linear-gradient(135deg,#0d2c18,#0a1f0f);
+  border:1px solid var(--brd2);
+  border-radius:var(--R);
+  width:100%;max-width:540px;
+  max-height:90vh;overflow-y:auto;
+  box-shadow:var(--sh2);
+  animation:scaleUp .25s var(--ease) both;
+}
+.modal-lg{max-width:680px;}
+@keyframes scaleUp{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.mhd{
+  padding:1rem 1.3rem;
+  border-bottom:1px solid var(--brd);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(26,107,60,.15);
+}
+.mhd h3{color:var(--wh);font-size:.95rem;font-weight:800;}
+.mcl{
+  width:30px;height:30px;
+  background:rgba(231,76,60,.14);
+  border:none;cursor:pointer;border-radius:7px;
+  color:#e74c3c;font-size:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;flex-shrink:0;
+}
+.mcl:hover{background:rgba(231,76,60,.3);}
+.mbd{padding:1.3rem;}
+.mft{
+  padding:.9rem 1.3rem;
+  border-top:1px solid rgba(255,255,255,.05);
+  display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;
+}
+
+/* ═══════════════════ DETAIL ROWS ═══════════════════ */
+.drow{
+  background:rgba(255,255,255,.04);
+  border-radius:9px;padding:10px 13px;
+  margin-bottom:7px;
+}
+.drow label{display:block;font-size:.68rem;color:var(--g2);margin-bottom:2px;font-weight:700;}
+.drow .val{color:var(--wh);font-size:.86rem;}
+.drow .val.pre{white-space:pre-wrap;line-height:2.05;font-size:.83rem;}
+.drow2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+
+/* ═══════════════════ SCROLLBAR ═══════════════════ */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:rgba(0,0,0,.1);}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(201,168,76,.45);}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media(max-width:900px){
+  .sidebar{width:200px;}
+}
+@media(max-width:720px){
+  .hdr{padding:0 1rem;}
+  .con,.con-w{padding:1.4rem 1rem;}
+  .hero{padding:2.5rem 1rem 2rem;}
+  .admin-layout{flex-direction:column;}
+  .sidebar{width:100%;height:auto;border-left:none;border-bottom:1px solid var(--brd);}
+  .sb-nav{display:flex;padding:.5rem;overflow-x:auto;gap:4px;}
+  .sb-section{display:none;}
+  .sb-item{border-right:none;border-bottom:3px solid transparent;border-radius:8px;white-space:nowrap;padding:.5rem .9rem;}
+  .sb-item.act{border-right-color:transparent;border-bottom-color:var(--g1);}
+  .admin-main{height:auto;}
+  table{font-size:.75rem;}
+  thead th,tbody td{padding:8px 9px;}
+  .act-btns{flex-wrap:wrap;}
+  .fr2,.fr3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="root">
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                    HOME PAGE                             ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="view-home" class="view show">
+  <header class="hdr">
+    <a class="logo" href="#" onclick="nav('home');return false;">
+      <div class="logo-mark">🕌</div>
+      <div class="logo-text"><h1>النظام الرسمي</h1><span>Official System</span></div>
+    </a>
+    <div class="hdr-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('track')"><i class="fas fa-search"></i> متابعة الطلب</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="bismi">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+    <div class="tasl">✦ ✦ ✦</div>
+    <div class="hero-pill"><i class="fas fa-shield-alt"></i> النظام الرسمي للتحقق والعضوية</div>
+    <h1>مرحباً بك في نظامنا الرسمي</h1>
+    <h2>Official Verification & Membership System</h2>
+    <p>اختر الخدمة المطلوبة لتقديم طلبك أو متابعة حالة طلباتك السابقة</p>
+  </div>
+
+  <div class="con">
+    <div class="svc-grid">
+      <div class="svc" onclick="nav('verif')">
+        <div class="svc-icon gold">🔐</div>
+        <h3>طلب تحقق</h3>
+        <p>تقديم طلب تحقق رسمي يتضمن البيانات الشخصية وأسماء السلالة والمستندات المطلوبة</p>
+        <div style="margin-top:1.3rem;">
+          <span class="btn btn-gold" style="display:inline-flex;gap:6px;font-size:.82rem;padding:8px 18px;">
+            <i class="fas fa-plus-circle"></i> تقديم طلب تحقق
+          </span>
+        </div>
+      </div>
+      <div class="svc" onclick="nav('memb')">
+        <div class="svc-icon teal">🪪</div>
+        <h3>طلب عضوية</h3>
+        <p>التقدم للحصول على عضوية رسمية بملء نموذج العضوية الشامل مع كافة البيانات المطلوبة</p>
+        <div style="margin-top:1.3rem;">
+          <span class="btn btn-teal" style="display:inline-flex;gap:6px;font-size:.82rem;padding:8px 18px;">
+            <i class="fas fa-user-plus"></i> تقديم طلب عضوية
+          </span>
+        </div>
+      </div>
+      <div class="svc" onclick="nav('track')">
+        <div class="svc-icon blue">🔍</div>
+        <h3>متابعة الطلبات</h3>
+        <p>تتبع حالة طلبك بكتابة اسمك الكامل ومشاهدة تحديثات طلباتك بشكل فوري</p>
+        <div style="margin-top:1.3rem;">
+          <span class="btn btn-outline" style="display:inline-flex;gap:6px;font-size:.82rem;padding:8px 18px;">
+            <i class="fas fa-search"></i> متابعة الطلب
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║               VERIFICATION REQUEST                       ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="view-verif" class="view">
+  <header class="hdr">
+    <a class="logo" href="#" onclick="nav('home');return false;">
+      <div class="logo-mark">🔐</div>
+      <div class="logo-text"><h1>طلب تحقق جديد</h1><span>New Verification Request</span></div>
+    </a>
+    <div class="hdr-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('home')"><i class="fas fa-home"></i> الرئيسية</button>
+    </div>
+  </header>
+
+  <div class="con">
+    <div class="steps">
+      <div class="step on" id="vs1"><div class="snum">1</div><div class="slabel">البيانات الشخصية</div></div>
+      <div class="sbar" id="vb1"></div>
+      <div class="step" id="vs2"><div class="snum">2</div><div class="slabel">رفع المستندات</div></div>
+      <div class="sbar" id="vb2"></div>
+      <div class="step" id="vs3"><div class="snum">3</div><div class="slabel">التأكيد</div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="vp1">
+      <div class="card">
+        <div class="card-hd"><div class="cic"><i class="fas fa-user-edit"></i></div><div><h3>بيانات مقدم الطلب</h3><span>Personal Information</span></div></div>
+        <div class="card-b">
+          <div class="fr2">
+            <div class="fg"><label class="fl"><span class="rq">*</span>الاسم الكامل | Full Name</label><input id="vn" type="text" class="fc" placeholder="الاسم الكامل..."></div>
+            <div class="fg"><label class="fl"><span class="rq">*</span>المنصب / الوظيفة | Position</label><input id="vp" type="text" class="fc" placeholder="المنصب أو الوظيفة..."></div>
+          </div>
+          <div class="fg"><label class="fl"><span class="rq">*</span>العنوان | Address</label><input id="va" type="text" class="fc" placeholder="العنوان الكامل..."></div>
+          <div class="fg">
+            <label class="fl"><span class="rq">*</span>أسماء السلالة | Lineage Names</label>
+            <p style="font-size:.72rem;color:var(--tx3);margin-bottom:6px;">أدخل حتى 45 اسماً — كل اسم في سطر منفصل</p>
+            <textarea id="vl" class="fc" placeholder="1. الاسم الأول&#10;2. الاسم الثاني&#10;3. الاسم الثالث&#10;...&#10;(يستوعب حتى 45 اسماً)"></textarea>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label class="fl">📅 التاريخ | Date</label><input id="vd" type="text" class="fc" readonly style="background:rgba(255,255,255,.02);cursor:default;"></div>
+            <div class="fg"><label class="fl">🕐 الوقت | Time</label><input id="vt" type="text" class="fc" readonly style="background:rgba(255,255,255,.02);cursor:default;"></div>
+          </div>
+          <div id="ve1" class="al al-err" style="display:none;"><i class="fas fa-exclamation-circle"></i><span></span></div>
+          <button class="btn btn-gold btn-w" onclick="vNext()"><i class="fas fa-arrow-left"></i> التالي: رفع المستندات</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="vp2" style="display:none;">
+      <div class="card">
+        <div class="card-hd"><div class="cic"><i class="fas fa-cloud-upload-alt"></i></div><div><h3>رفع المستندات المطلوبة</h3><span>Upload Documents</span></div></div>
+        <div class="card-b">
+          <div class="fg">
+            <label class="fl"><span class="rq">*</span>الصورة الشخصية — حجم جواز السفر | Passport Photo</label>
+            <div class="upz"><input type="file" id="vf1" accept=".jpg,.jpeg,.png" onchange="hf('vf1','upv1','upn1',true)"><div class="upz-icon">🖼️</div><p>اسحب وأفلت أو انقر للاختيار</p><small>JPG / PNG فقط</small></div>
+            <div class="uprev" id="upv1"><img id="upv1-img" src="" alt=""><p id="upn1" style="font-size:.75rem;color:var(--tx2);margin-top:4px;"></p></div>
+          </div>
+          <div class="fg">
+            <label class="fl"><span class="rq">*</span>وثيقة السلالة | Lineage Document</label>
+            <div class="upz"><input type="file" id="vf2" accept=".pdf,.jpg,.jpeg" onchange="hf('vf2','upv2','upn2',false)"><div class="upz-icon">📄</div><p>اسحب وأفلت أو انقر للاختيار</p><small>PDF أو JPG فقط</small></div>
+            <div class="uprev" id="upv2"><p id="upn2" style="font-size:.85rem;color:var(--g1);"></p></div>
+          </div>
+          <div id="ve2" class="al al-err" style="display:none;"><i class="fas fa-exclamation-circle"></i><span></span></div>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;">
+            <button class="btn btn-ghost" onclick="vstep(1)"><i class="fas fa-arrow-right"></i> السابق</button>
+            <button class="btn btn-gold" style="flex:1;justify-content:center;" onclick="vsub()"><i class="fas fa-paper-plane"></i> إرسال الطلب نهائياً</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 SUCCESS -->
+    <div id="vp3" style="display:none;">
+      <div class="success-card">
+        <div style="font-size:3.5rem;margin-bottom:.8rem;animation:fadeUp .5s var(--ease);">🎉</div>
+        <h2 style="font-family:'Amiri',serif;font-size:1.8rem;color:var(--g1);margin-bottom:.3rem;">تم إرسال طلب التحقق بنجاح!</h2>
+        <p style="color:var(--tx2);font-size:.85rem;margin-bottom:.5rem;">Verification request submitted successfully</p>
+        <div class="success-id" id="vsid"></div>
+        <p style="color:var(--tx3);font-size:.78rem;margin-bottom:2rem;">استخدم اسمك الكامل للبحث عن طلبك في صفحة المتابعة</p>
+        <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-gold" onclick="nav('track')"><i class="fas fa-search"></i> متابعة الطلب</button>
+          <button class="btn btn-ghost" onclick="vreset();nav('home')"><i class="fas fa-home"></i> الرئيسية</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║               MEMBERSHIP REQUEST                         ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="view-memb" class="view">
+  <header class="hdr">
+    <a class="logo" href="#" onclick="nav('home');return false;">
+      <div class="logo-mark">🪪</div>
+      <div class="logo-text"><h1>طلب عضوية جديد</h1><span>New Membership Request</span></div>
+    </a>
+    <div class="hdr-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('home')"><i class="fas fa-home"></i> الرئيسية</button>
+    </div>
+  </header>
+
+  <div class="con">
+    <div style="text-align:center;margin:1.5rem 0 1.8rem;animation:fadeUp .5s var(--ease);">
+      <div style="display:inline-flex;align-items:center;gap:7px;padding:5px 16px;background:rgba(26,188,156,.1);border:1px solid rgba(26,188,156,.25);border-radius:50px;color:#76d7c4;font-size:.75rem;margin-bottom:.9rem;">
+        <i class="fas fa-id-card"></i> نموذج طلب العضوية الرسمي
+      </div>
+      <h2 style="font-family:'Amiri',serif;font-size:1.7rem;">طلب عضوية جديد</h2>
+    </div>
+
+    <div id="mform">
+      <div class="card">
+        <div class="card-hd" style="background:linear-gradient(135deg,rgba(26,188,156,.15),rgba(13,74,40,.35));"><div class="cic" style="background:rgba(26,188,156,.14);color:#76d7c4;"><i class="fas fa-id-card"></i></div><div><h3>بيانات العضوية</h3><span>Membership Details</span></div></div>
+        <div class="card-b">
+          <div class="fr2">
+            <div class="fg"><label class="fl"><span class="rq">*</span>الاسم الكامل | Full Name</label><input id="mn" type="text" class="fc" placeholder="الاسم الكامل..."></div>
+            <div class="fg"><label class="fl"><span class="rq">*</span>اسم العائلة | Family Name</label><input id="mf" type="text" class="fc" placeholder="اسم العائلة..."></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label class="fl"><span class="rq">*</span>رقم التحقق | Verification Number</label><input id="mv" type="text" class="fc" placeholder="رقم التحقق..."></div>
+            <div class="fg"><label class="fl"><span class="rq">*</span>المنصب المطلوب | Requested Position</label><input id="mr" type="text" class="fc" placeholder="المنصب المطلوب..."></div>
+          </div>
+          <div class="fg"><label class="fl"><span class="rq">*</span>العنوان | Address</label><input id="ma" type="text" class="fc" placeholder="العنوان الكامل..."></div>
+          <div class="fg"><label class="fl"><span class="rq">*</span>البريد الإلكتروني | Email ID</label><input id="me" type="email" class="fc" placeholder="example@email.com" dir="ltr"></div>
+          <div class="fr2">
+            <div class="fg"><label class="fl">📅 التاريخ</label><input id="md" type="text" class="fc" readonly style="background:rgba(255,255,255,.02);cursor:default;"></div>
+            <div class="fg"><label class="fl">🕐 الوقت</label><input id="mt" type="text" class="fc" readonly style="background:rgba(255,255,255,.02);cursor:default;"></div>
+          </div>
+          <div id="me1" class="al al-err" style="display:none;"><i class="fas fa-exclamation-circle"></i><span></span></div>
+          <button class="btn btn-teal btn-w" onclick="msub()"><i class="fas fa-paper-plane"></i> إرسال طلب العضوية</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="msuccess" style="display:none;">
+      <div class="success-card" style="border-color:rgba(26,188,156,.25);">
+        <div style="font-size:3.5rem;margin-bottom:.8rem;">🌟</div>
+        <h2 style="font-family:'Amiri',serif;font-size:1.8rem;color:#76d7c4;margin-bottom:.3rem;">تم إرسال طلب العضوية بنجاح!</h2>
+        <p style="color:var(--tx2);font-size:.85rem;margin-bottom:.5rem;">Membership request submitted successfully</p>
+        <div class="success-id" id="msid" style="color:#76d7c4;border-color:rgba(26,188,156,.22);background:rgba(26,188,156,.08);"></div>
+        <p style="color:var(--tx3);font-size:.78rem;margin-bottom:2rem;">استخدم اسمك الكامل للبحث عن طلبك في صفحة المتابعة</p>
+        <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-teal" onclick="nav('track')"><i class="fas fa-search"></i> متابعة الطلب</button>
+          <button class="btn btn-ghost" onclick="mreset();nav('home')"><i class="fas fa-home"></i> الرئيسية</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                    TRACK PAGE                            ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="view-track" class="view">
+  <header class="hdr">
+    <a class="logo" href="#" onclick="nav('home');return false;">
+      <div class="logo-mark">🔍</div>
+      <div class="logo-text"><h1>متابعة الطلبات</h1><span>Track Applications</span></div>
+    </a>
+    <div class="hdr-right">
+      <button class="btn btn-ghost btn-sm" onclick="nav('home')"><i class="fas fa-home"></i> الرئيسية</button>
+    </div>
+  </header>
+
+  <div class="con" style="max-width:700px;">
+    <div style="margin-top:1.5rem;">
+      <div class="search-hero">
+        <h2 style="color:var(--wh);">🔍 ابحث عن طلبك</h2>
+        <p>أدخل اسمك الكامل كما كتبته في الطلب لمشاهدة حالته</p>
+        <div class="search-box">
+          <input type="text" id="tk" class="fc" placeholder="اكتب اسمك الكامل..." onkeydown="if(event.key==='Enter')doTrack()">
+          <button class="btn btn-gold" onclick="doTrack()"><i class="fas fa-search"></i> بحث</button>
+        </div>
+      </div>
+      <div id="tk-res"></div>
+      <div id="tk-empty" style="display:none;">
+        <div class="empty"><i class="fas fa-search"></i><p>لم يتم العثور على نتائج لهذا الاسم</p><p style="font-size:.78rem;margin-top:.4rem;">تأكد من كتابة الاسم كما أدخلته في الطلب</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                 ADMIN LOGIN (hidden at #/admin)          ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="view-login" class="view">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-head">
+        <div class="moon">🌙</div>
+        <h2>لوحة الإدارة</h2>
+        <p>Admin Panel — Authorized Access Only</p>
+      </div>
+      <div class="login-body">
+        <div class="fg"><label class="fl"><i class="fas fa-user"></i> اسم المستخدم</label><input type="text" id="lu" class="fc" placeholder="admin" autocomplete="off"></div>
+        <div class="fg" style="position:relative;">
+          <label class="fl"><i class="fas fa-lock"></i> كلمة المرور</label>
+          <input type="password" id="lp" class="fc" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div id="lerr" class="al al-err" style="display:none;"><i class="fas fa-times-circle"></i><span>بيانات الدخول غير صحيحة</span></div>
+        <button class="btn btn-gold btn-w" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> دخول</button>
+        <button class="btn btn-ghost btn-w" style="margin-top:8px;" onclick="nav('home')"><i class="fas fa-arrow-right"></i> العودة للرئيسية</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║                   ADMIN DASHBOARD                        ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<div id="view-admin" class="view">
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="logo">
+      <div class="logo-mark">⚙️</div>
+      <div class="logo-text"><h1>لوحة الإدارة</h1><span>Admin Control Panel</span></div>
+    </div>
+    <div class="hdr-right">
+      <span style="font-size:.75rem;color:var(--g2);display:flex;align-items:center;gap:5px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#2ecc71;display:inline-block;box-shadow:0 0 6px #2ecc71;"></span>
+        مدير النظام
+      </span>
+      <button class="btn btn-red btn-sm" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sb-logo">
+        <div class="dot"></div>
+        <span>لوحة التحكم</span>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-section">الرئيسية</div>
+        <div class="sb-item act" onclick="aSec('overview',this)"><i class="fas fa-chart-pie"></i> نظرة عامة <span class="sb-badge" id="sb-tot">0</span></div>
+        <div class="sb-section">الطلبات</div>
+        <div class="sb-item" onclick="aSec('all',this)"><i class="fas fa-list"></i> جميع الطلبات <span class="sb-badge" id="sb-all2">0</span></div>
+        <div class="sb-item" onclick="aSec('verif',this)"><i class="fas fa-shield-alt"></i> طلبات التحقق <span class="sb-badge" id="sb-v">0</span></div>
+        <div class="sb-item" onclick="aSec('memb',this)"><i class="fas fa-id-card"></i> طلبات العضوية <span class="sb-badge" id="sb-m">0</span></div>
+        <div class="sb-section">الحالات</div>
+        <div class="sb-item" onclick="aSec('pend',this)"><i class="fas fa-clock"></i> قيد الانتظار <span class="sb-badge" id="sb-p">0</span></div>
+        <div class="sb-item" onclick="aSec('proc',this)"><i class="fas fa-cog fa-spin" style="animation-duration:3s;"></i> قيد المعالجة <span class="sb-badge" id="sb-pr">0</span></div>
+        <div class="sb-item" onclick="aSec('done',this)"><i class="fas fa-check-circle"></i> مكتملة <span class="sb-badge" id="sb-c">0</span></div>
+        <div class="sb-item" onclick="aSec('rej',this)"><i class="fas fa-times-circle"></i> مرفوضة <span class="sb-badge" id="sb-r">0</span></div>
+      </div>
+      <div class="sb-bottom">
+        <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="nav('home')"><i class="fas fa-external-link-alt"></i> الموقع العام</button>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+      <!-- OVERVIEW SECTION -->
+      <div id="sec-overview" class="a-section act">
+        <div class="admin-topbar">
+          <div><h2>نظرة عامة</h2><p>Overview Dashboard</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="renderAdmin()"><i class="fas fa-sync-alt"></i> تحديث</button>
+        </div>
+        <div class="con-w">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(201,168,76,.12);"><i class="fas fa-folder-open" style="color:var(--g1);"></i></div>
+              <div class="stat-num" id="ov-tot" style="color:var(--g1);">0</div>
+              <div class="stat-label">إجمالي الطلبات</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(155,89,182,.12);"><i class="fas fa-shield-alt" style="color:#c39bd3;"></i></div>
+              <div class="stat-num" id="ov-v" style="color:#c39bd3;">0</div>
+              <div class="stat-label">طلبات التحقق</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(26,188,156,.12);"><i class="fas fa-id-card" style="color:#76d7c4;"></i></div>
+              <div class="stat-num" id="ov-m" style="color:#76d7c4;">0</div>
+              <div class="stat-label">طلبات العضوية</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(243,156,18,.12);"><i class="fas fa-clock" style="color:#f5b041;"></i></div>
+              <div class="stat-num" id="ov-p" style="color:#f5b041;">0</div>
+              <div class="stat-label">قيد الانتظار</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(52,152,219,.12);"><i class="fas fa-cog" style="color:#5dade2;"></i></div>
+              <div class="stat-num" id="ov-pr" style="color:#5dade2;">0</div>
+              <div class="stat-label">قيد المعالجة</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(46,204,113,.12);"><i class="fas fa-check-circle" style="color:#58d68d;"></i></div>
+              <div class="stat-num" id="ov-c" style="color:#58d68d;">0</div>
+              <div class="stat-label">مكتملة</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon-wrap" style="background:rgba(231,76,60,.12);"><i class="fas fa-times-circle" style="color:#ec7063;"></i></div>
+              <div class="stat-num" id="ov-r" style="color:#ec7063;">0</div>
+              <div class="stat-label">مرفوضة</div>
+            </div>
+          </div>
+          <!-- Recent requests preview -->
+          <div class="card">
+            <div class="card-hd"><div class="cic"><i class="fas fa-history"></i></div><div><h3>أحدث الطلبات</h3><span>Recent Requests</span></div></div>
+            <div class="card-b" style="padding:0;">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>رقم الطلب</th><th>النوع</th><th>الاسم</th><th>التاريخ</th><th>الحالة</th><th>إجراء</th></tr></thead>
+                  <tbody id="recent-tb"></tbody>
+                </table>
+                <div id="recent-empty" class="empty" style="display:none;"><i class="fas fa-inbox"></i><p>لا توجد طلبات بعد</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALL / FILTERED TABLE SECTION (shared template) -->
+      <div id="sec-all" class="a-section">
+        <div class="admin-topbar">
+          <div><h2 id="sec-title">جميع الطلبات</h2><p id="sec-sub">All Requests</p></div>
+        </div>
+        <div class="con-w">
+          <div class="filter-bar">
+            <input type="text" id="asearch" class="fc" placeholder="🔍 بحث بالاسم أو رقم الطلب..." oninput="renderTable()">
+            <div class="chip-grp">
+              <div class="chip on" id="chip-all" onclick="chipF('all')">الكل</div>
+              <div class="chip" id="chip-verif" onclick="chipF('verif')">🔐 تحقق</div>
+              <div class="chip" id="chip-memb" onclick="chipF('memb')">🪪 عضوية</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-b" style="padding:0;">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>رقم الطلب</th><th>النوع</th><th>الاسم الكامل</th><th>المنصب / رقم التحقق</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
+                  <tbody id="main-tb"></tbody>
+                </table>
+                <div id="main-empty" class="empty" style="display:none;"><i class="fas fa-inbox"></i><p>لا توجد طلبات في هذه الفئة</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS SECTIONS (verif/memb/pend/proc/done/rej) -->
+      <div id="sec-verif" class="a-section"></div>
+      <div id="sec-memb"  class="a-section"></div>
+      <div id="sec-pend"  class="a-section"></div>
+      <div id="sec-proc"  class="a-section"></div>
+      <div id="sec-done"  class="a-section"></div>
+      <div id="sec-rej"   class="a-section"></div>
+    </main>
+  </div>
+</div>
+
+</div><!-- #root -->
+
+<!-- ═══════════════════════════════ MODALS ═══════════════════════════════ -->
+<!-- VIEW MODAL -->
+<div class="overlay" id="ov-view">
+  <div class="modal modal-lg">
+    <div class="mhd"><h3><i class="fas fa-eye" style="color:var(--g1);margin-left:7px;"></i> تفاصيل الطلب</h3><button class="mcl" onclick="cM('ov-view')"><i class="fas fa-times"></i></button></div>
+    <div class="mbd" id="view-body"></div>
+    <div class="mft"><button class="btn btn-ghost btn-sm" onclick="cM('ov-view')"><i class="fas fa-times"></i> إغلاق</button></div>
+  </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="overlay" id="ov-rej">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fas fa-ban" style="color:#e74c3c;margin-left:7px;"></i> رفض الطلب</h3><button class="mcl" onclick="cM('ov-rej')"><i class="fas fa-times"></i></button></div>
+    <div class="mbd">
+      <p style="color:var(--tx2);margin-bottom:.9rem;font-size:.86rem;">أدخل سبب الرفض (سيظهر للمتقدم):</p>
+      <input type="text" id="rjr" class="fc" placeholder="سبب الرفض...">
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost btn-sm" onclick="cM('ov-rej')">إلغاء</button>
+      <button class="btn btn-red btn-sm" onclick="confRej()"><i class="fas fa-ban"></i> تأكيد الرفض</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="ov-edit">
+  <div class="modal modal-lg">
+    <div class="mhd"><h3><i class="fas fa-edit" style="color:var(--g1);margin-left:7px;"></i> تعديل الطلب</h3><button class="mcl" onclick="cM('ov-edit')"><i class="fas fa-times"></i></button></div>
+    <div class="mbd">
+      <div id="edit-f"></div>
+      <div class="fg">
+        <label class="fl">الحالة | Status</label>
+        <select id="e-st" class="fc">
+          <option value="pending">⏳ قيد الانتظار</option>
+          <option value="processing">🔄 قيد المعالجة</option>
+          <option value="completed">✅ مكتمل</option>
+          <option value="rejected">❌ مرفوض</option>
+        </select>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost btn-sm" onclick="cM('ov-edit')">إلغاء</button>
+      <button class="btn btn-green btn-sm" onclick="saveEd()"><i class="fas fa-save"></i> حفظ التعديلات</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ JS ═══════════════════════════════ -->
+<script>
+'use strict';
+// ── CONSTANTS ─────────────────────────────────────────────────
+const AU='admin', AP='ChieF@2024#Admin!Secure$786';
+const VIEWS=['home','verif','memb','track','login','admin'];
+let DB=JSON.parse(localStorage.getItem('vms3')||'[]');
+let curSec='all', curChip='all', curRjId=null, curEdId=null;
+const save=()=>localStorage.setItem('vms3',JSON.stringify(DB));
+const uid=p=>p+'-'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).substr(2,3).toUpperCase();
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ── ROUTER ────────────────────────────────────────────────────
+function nav(v){
+  // hide all
+  VIEWS.forEach(x=>{
+    const el=document.getElementById('view-'+x);
+    el.classList.remove('show');
+    el.style.display='none';
+  });
+  const el=document.getElementById('view-'+v);
+  el.style.display='flex';
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ el.classList.add('show'); }); });
+  window.scrollTo(0,0);
+  history.replaceState(null,'','#/'+v);
+  if(v==='admin') renderAdmin();
+  if(v==='track'){ document.getElementById('tk').value=''; document.getElementById('tk-res').innerHTML=''; document.getElementById('tk-empty').style.display='none'; }
+  if(v==='verif'){ updDT('v'); vstep(1); }
+  if(v==='memb'){ updDT('m'); }
+}
+
+// HASH ROUTING
+function handleHash(){
+  const h=location.hash.replace('#/','');
+  if(h==='admin'){ document.getElementById('lerr').style.display='none'; nav('login'); return; }
+  if(VIEWS.includes(h)){ nav(h); } else { nav('home'); }
+}
+window.addEventListener('hashchange',handleHash);
+window.addEventListener('load',()=>{
+  // init all hidden
+  VIEWS.forEach(x=>{ const el=document.getElementById('view-'+x); el.style.display='none'; el.classList.remove('show'); });
+  handleHash();
+  updDT('v'); updDT('m');
+  setInterval(()=>{updDT('v');updDT('m');},1000);
+});
+
+// ── DATE/TIME ─────────────────────────────────────────────────
+function updDT(p){
+  const n=new Date();
+  const di=document.getElementById(p+'d'); if(di)di.value=n.toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});
+  const ti=document.getElementById(p+'t'); if(ti)ti.value=n.toLocaleTimeString('ar-SA');
+}
+
+// ── AUTH ──────────────────────────────────────────────────────
+function doLogin(){
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp').value;
+  if(u===AU&&p===AP){
+    document.getElementById('lerr').style.display='none';
+    document.getElementById('lu').value='';
+    document.getElementById('lp').value='';
+    nav('admin');
+  } else {
+    const err=document.getElementById('lerr');
+    err.style.display='flex';
+    err.style.animation='none';
+    setTimeout(()=>err.style.animation='',10);
+  }
+}
+function doLogout(){ nav('home'); }
+
+// ── FILE UPLOAD ───────────────────────────────────────────────
+function hf(inp,prvId,nmId,showImg){
+  const f=document.getElementById(inp).files[0]; if(!f)return;
+  const ext=f.name.split('.').pop().toLowerCase();
+  const ok=showImg?['jpg','jpeg','png']:['pdf','jpg','jpeg'];
+  if(!ok.includes(ext)){ alert('نوع الملف غير مسموح. المقبول: '+ok.join(', ')); document.getElementById(inp).value=''; return; }
+  const prv=document.getElementById(prvId); const nm=document.getElementById(nmId);
+  if(nm)nm.textContent='✅ '+f.name;
+  prv.style.display='block';
+  if(showImg){ const r=new FileReader(); r.onload=e=>{ const i=document.getElementById(prvId+'-img'); if(i)i.src=e.target.result; }; r.readAsDataURL(f); }
+}
+
+// ── VERIFICATION FORM ─────────────────────────────────────────
+function vstep(n){
+  [1,2,3].forEach(i=>{ document.getElementById('vp'+i).style.display=(i===n?'block':'none'); });
+  [1,2,3].forEach(i=>{
+    const s=document.getElementById('vs'+i);
+    s.classList.remove('on','ok');
+    if(i<n)s.classList.add('ok');
+    else if(i===n)s.classList.add('on');
+  });
+  [1,2].forEach(i=>{ const b=document.getElementById('vb'+i); if(b)b.className='sbar'+(i<n?' ok':''); });
+  window.scrollTo(0,0);
+}
+function vNext(){
+  const nm=document.getElementById('vn').value.trim();
+  const ps=document.getElementById('vp').value.trim();
+  const ad=document.getElementById('va').value.trim();
+  const ln=document.getElementById('vl').value.trim();
+  const er=document.getElementById('ve1');
+  if(!nm||!ps||!ad||!ln){ er.style.display='flex'; er.querySelector('span').textContent='يرجى تعبئة جميع الحقول المطلوبة'; return; }
+  er.style.display='none'; vstep(2);
+}
+function vsub(){
+  const p1=document.getElementById('vf1').files[0];
+  const p2=document.getElementById('vf2').files[0];
+  const er=document.getElementById('ve2');
+  if(!p1||!p2){ er.style.display='flex'; er.querySelector('span').textContent='يرجى رفع جميع المستندات المطلوبة'; return; }
+  er.style.display='none';
+  const id=uid('VR');
+  DB.unshift({id,type:'verif',
+    fullname:document.getElementById('vn').value.trim(),
+    position:document.getElementById('vp').value.trim(),
+    address:document.getElementById('va').value.trim(),
+    lineage:document.getElementById('vl').value.trim(),
+    date:document.getElementById('vd').value,
+    time:document.getElementById('vt').value,
+    photoName:p1.name,linDocName:p2.name,
+    status:'pending',rejectReason:'',createdAt:new Date().toISOString()
+  });
+  save();
+  document.getElementById('vsid').textContent=id;
+  vstep(3);
+}
+function vreset(){
+  ['vn','vp','va','vl'].forEach(x=>document.getElementById(x).value='');
+  ['vf1','vf2'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('upv1').style.display='none';
+  document.getElementById('upv2').style.display='none';
+  vstep(1);
+}
+
+// ── MEMBERSHIP FORM ───────────────────────────────────────────
+function msub(){
+  const fields=[['mn','الاسم الكامل'],['mf','اسم العائلة'],['mv','رقم التحقق'],['mr','المنصب المطلوب'],['ma','العنوان'],['me','البريد الإلكتروني']];
+  const er=document.getElementById('me1');
+  for(const [id,lbl] of fields){
+    if(!document.getElementById(id).value.trim()){ er.style.display='flex'; er.querySelector('span').textContent='حقل "'+lbl+'" مطلوب'; return; }
+  }
+  const email=document.getElementById('me').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ er.style.display='flex'; er.querySelector('span').textContent='يرجى إدخال بريد إلكتروني صحيح'; return; }
+  er.style.display='none';
+  const id=uid('MB');
+  DB.unshift({id,type:'memb',
+    fullname:document.getElementById('mn').value.trim(),
+    familyName:document.getElementById('mf').value.trim(),
+    verifNo:document.getElementById('mv').value.trim(),
+    reqPosition:document.getElementById('mr').value.trim(),
+    address:document.getElementById('ma').value.trim(),
+    email,
+    date:document.getElementById('md').value,
+    time:document.getElementById('mt').value,
+    status:'pending',rejectReason:'',createdAt:new Date().toISOString()
+  });
+  save();
+  document.getElementById('msid').textContent=id;
+  document.getElementById('mform').style.display='none';
+  document.getElementById('msuccess').style.display='block';
+  window.scrollTo(0,0);
+}
+function mreset(){
+  ['mn','mf','mv','mr','ma','me'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('mform').style.display='block';
+  document.getElementById('msuccess').style.display='none';
+}
+
+// ── STATUS / BADGE HELPERS ────────────────────────────────────
+const SM={
+  pending:   {l:'قيد الانتظار', c:'b-pend',i:'⏳'},
+  processing:{l:'قيد المعالجة', c:'b-proc',i:'🔄'},
+  completed: {l:'مكتمل',        c:'b-done',i:'✅'},
+  rejected:  {l:'مرفوض',        c:'b-rej', i:'❌'}
+};
+const bSt=st=>{ const s=SM[st]||SM.pending; return`<span class="badge ${s.c}">${s.i} ${s.l}</span>`; };
+const bTy=t=>t==='verif'?`<span class="badge b-vrf">🔐 تحقق</span>`:`<span class="badge b-mem">🪪 عضوية</span>`;
+
+// ── TRACK ─────────────────────────────────────────────────────
+function doTrack(){
+  const q=document.getElementById('tk').value.trim().toLowerCase();
+  const res=document.getElementById('tk-res');
+  const emp=document.getElementById('tk-empty');
+  if(!q){ res.innerHTML=''; emp.style.display='none'; return; }
+  const found=DB.filter(r=>r.fullname.toLowerCase().includes(q));
+  emp.style.display='none';
+  if(!found.length){ res.innerHTML=''; emp.style.display='block'; return; }
+  res.innerHTML=found.map((r,i)=>`
+    <div class="rcard" style="animation-delay:${i*.05}s">
+      <div class="rcard-top">
+        <div style="display:flex;align-items:center;gap:7px;">${bTy(r.type)}<span style="font-family:monospace;color:var(--g1);font-size:.78rem;font-weight:700;">#${r.id}</span></div>
+        ${bSt(r.status)}
+      </div>
+      <div class="rcard-grid">
+        <div><b>الاسم الكامل:</b> ${esc(r.fullname)}</div>
+        <div><b>${r.type==='verif'?'المنصب:':'اسم العائلة:'}</b> ${esc(r.type==='verif'?r.position:r.familyName)}</div>
+        ${r.type==='memb'?`<div><b>رقم التحقق:</b> ${esc(r.verifNo)}</div><div><b>البريد:</b> <span dir="ltr">${esc(r.email)}</span></div>`:''}
+        <div><b>التاريخ:</b> ${r.date}</div>
+        <div><b>الوقت:</b> ${r.time}</div>
+      </div>
+      ${r.status==='rejected'&&r.rejectReason?`<div class="rej-note"><i class="fas fa-exclamation-circle"></i> سبب الرفض: ${esc(r.rejectReason)}</div>`:''}
+    </div>`).join('');
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────
+function renderAdmin(){
+  const tot=DB.length, v=DB.filter(r=>r.type==='verif').length, m=DB.filter(r=>r.type==='memb').length;
+  const p=DB.filter(r=>r.status==='pending').length, pr=DB.filter(r=>r.status==='processing').length;
+  const c=DB.filter(r=>r.status==='completed').length, rj=DB.filter(r=>r.status==='rejected').length;
+  // sidebar badges
+  ['tot','all2','v','m','p','pr','c','r'].forEach((k,i)=>{
+    const vals=[tot,tot,v,m,p,pr,c,rj];
+    const el=document.getElementById('sb-'+k); if(el)el.textContent=vals[i];
+  });
+  // overview stats
+  [['ov-tot',tot,'var(--g1)'],['ov-v',v,'#c39bd3'],['ov-m',m,'#76d7c4'],['ov-p',p,'#f5b041'],['ov-pr',pr,'#5dade2'],['ov-c',c,'#58d68d'],['ov-r',rj,'#ec7063']].forEach(([id,val])=>{
+    const el=document.getElementById(id); if(el)el.textContent=val;
+  });
+  // recent table (last 8)
+  const rtb=document.getElementById('recent-tb');
+  const remp=document.getElementById('recent-empty');
+  const recent=DB.slice(0,8);
+  if(!recent.length){ if(rtb)rtb.innerHTML=''; if(remp)remp.style.display='block'; }
+  else {
+    if(remp)remp.style.display='none';
+    if(rtb)rtb.innerHTML=recent.map(r=>`
+      <tr>
+        <td class="td-id">${r.id}</td>
+        <td>${bTy(r.type)}</td>
+        <td style="font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(r.fullname)}</td>
+        <td style="font-size:.75rem;color:var(--tx2);">${r.date}</td>
+        <td>${bSt(r.status)}</td>
+        <td><button class="btn btn-blue btn-xs" onclick="viewR('${r.id}')"><i class="fas fa-eye"></i></button></td>
+      </tr>`).join('');
+  }
+  renderTable();
+}
+
+let tableFilter='all';
+function aSec(sec,el){
+  document.querySelectorAll('.sb-item').forEach(x=>x.classList.remove('act'));
+  if(el)el.classList.add('act');
+  document.querySelectorAll('.a-section').forEach(x=>x.classList.remove('act'));
+  // for verif/memb/pend/proc/done/rej — redirect to 'all' section with filter
+  const map={all:'all',verif:'verif',memb:'memb',pend:'pending',proc:'processing',done:'completed',rej:'rejected'};
+  curSec=sec;
+  if(sec==='overview'){
+    document.getElementById('sec-overview').classList.add('act');
+    renderAdmin();
+    return;
+  }
+  // show 'all' section with appropriate filter
+  document.getElementById('sec-all').classList.add('act');
+  // set title
+  const titles={all:'جميع الطلبات',verif:'طلبات التحقق',memb:'طلبات العضوية',pend:'قيد الانتظار',proc:'قيد المعالجة',done:'مكتملة',rej:'مرفوضة'};
+  document.getElementById('sec-title').textContent=titles[sec]||'الطلبات';
+  // set chip filter
+  if(sec==='verif'||sec==='memb'){
+    tableFilter=sec; chipF(sec,false);
+  } else {
+    tableFilter='all'; chipF('all',false);
+  }
+  renderTable(map[sec]);
+}
+function chipF(v,callRender=true){
+  tableFilter=v;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  const c=document.getElementById('chip-'+v); if(c)c.classList.add('on');
+  if(callRender)renderTable();
+}
+function renderTable(statusOverride){
+  const search=(document.getElementById('asearch')||{value:''}).value.trim().toLowerCase();
+  const secMap={all:'all',verif:'verif',memb:'memb',pend:'pending',proc:'processing',done:'completed',rej:'rejected'};
+  let data=[...DB];
+  // type filter from chip
+  if(tableFilter==='verif')data=data.filter(r=>r.type==='verif');
+  else if(tableFilter==='memb')data=data.filter(r=>r.type==='memb');
+  // status override (from sidebar)
+  if(statusOverride&&statusOverride!=='all')data=data.filter(r=>r.status===statusOverride);
+  // search
+  if(search)data=data.filter(r=>r.fullname.toLowerCase().includes(search)||r.id.toLowerCase().includes(search));
+  const tb=document.getElementById('main-tb');
+  const em=document.getElementById('main-empty');
+  if(!data.length){ if(tb)tb.innerHTML=''; if(em)em.style.display='block'; return; }
+  if(em)em.style.display='none';
+  if(tb)tb.innerHTML=data.map(r=>`
+    <tr>
+      <td class="td-id">${r.id}</td>
+      <td>${bTy(r.type)}</td>
+      <td style="font-weight:600;">${esc(r.fullname)}</td>
+      <td style="font-size:.76rem;color:var(--tx2);">${esc(r.type==='verif'?r.position:r.verifNo)}</td>
+      <td style="font-size:.75rem;color:var(--tx2);">${r.date}</td>
+      <td>${bSt(r.status)}</td>
+      <td>
+        <div class="act-btns">
+          <button class="btn btn-blue btn-xs" onclick="viewR('${r.id}')" title="عرض التفاصيل"><i class="fas fa-eye"></i></button>
+          <button class="btn btn-sm btn-xs" style="background:rgba(52,152,219,.2);color:#5dade2;" onclick="setS('${r.id}','processing')" title="قيد المعالجة"><i class="fas fa-cog"></i></button>
+          <button class="btn btn-sm btn-xs" style="background:rgba(46,204,113,.2);color:#58d68d;" onclick="setS('${r.id}','completed')" title="اعتمد"><i class="fas fa-check"></i></button>
+          <button class="btn btn-orange btn-xs" onclick="oRej('${r.id}')" title="رفض"><i class="fas fa-ban"></i></button>
+          <button class="btn btn-xs" style="background:rgba(255,255,255,.08);color:var(--tx);" onclick="oEdit('${r.id}')" title="تعديل"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-red btn-xs" onclick="delR('${r.id}')" title="حذف"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function setS(id,st){
+  const r=DB.find(x=>x.id===id); if(!r)return;
+  r.status=st; if(st!=='rejected')r.rejectReason='';
+  save(); renderAdmin();
+}
+function delR(id){
+  if(!confirm('هل أنت متأكد من حذف هذا الطلب نهائياً؟'))return;
+  DB=DB.filter(x=>x.id!==id); save(); renderAdmin();
+}
+function oRej(id){ curRjId=id; document.getElementById('rjr').value=''; oM('ov-rej'); }
+function confRej(){
+  const rsn=document.getElementById('rjr').value.trim();
+  if(!rsn){alert('يرجى إدخال سبب الرفض');return;}
+  const r=DB.find(x=>x.id===curRjId);
+  if(r){r.status='rejected';r.rejectReason=rsn;}
+  save(); cM('ov-rej'); renderAdmin();
+}
+function viewR(id){
+  const r=DB.find(x=>x.id===id); if(!r)return;
+  const isV=r.type==='verif';
+  let h=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap;">${bTy(r.type)}<span class="td-id">${r.id}</span>${bSt(r.status)}</div>`;
+  const drow=(lbl,val,pre=false)=>`<div class="drow"><label>${lbl}</label><div class="val${pre?' pre':''}">${val}</div></div>`;
+  const drow2=(items)=>`<div class="drow2">${items.map(([l,v])=>`<div class="drow"><label>${l}</label><div class="val">${v}</div></div>`).join('')}</div>`;
+  h+=drow2([['الاسم الكامل',esc(r.fullname)],[isV?'المنصب':'اسم العائلة',esc(isV?r.position:r.familyName)]]);
+  if(isV){
+    h+=drow('العنوان',esc(r.address));
+    h+=drow('أسماء السلالة',esc(r.lineage),true);
+    h+=drow2([['صورة جواز السفر','📷 '+esc(r.photoName)],['وثيقة السلالة','📄 '+esc(r.linDocName)]]);
+  } else {
+    h+=drow2([['رقم التحقق',esc(r.verifNo)],['المنصب المطلوب',esc(r.reqPosition)]]);
+    h+=drow('العنوان',esc(r.address));
+    h+=drow('البريد الإلكتروني',`<span dir="ltr">${esc(r.email)}</span>`);
+  }
+  h+=drow2([['التاريخ',r.date],['الوقت',r.time]]);
+  if(r.rejectReason)h+=`<div class="al al-err" style="margin-top:.6rem;"><i class="fas fa-exclamation-circle"></i> سبب الرفض: ${esc(r.rejectReason)}</div>`;
+  document.getElementById('view-body').innerHTML=h;
+  oM('ov-view');
+}
+function oEdit(id){
+  const r=DB.find(x=>x.id===id); if(!r)return;
+  curEdId=id;
+  const isV=r.type==='verif';
+  let f='';
+  if(isV){
+    f=`<div class="fr2"><div class="fg"><label class="fl">الاسم الكامل</label><input id="ef-n" type="text" class="fc" value="${esc(r.fullname)}"></div><div class="fg"><label class="fl">المنصب</label><input id="ef-p" type="text" class="fc" value="${esc(r.position)}"></div></div>
+    <div class="fg"><label class="fl">العنوان</label><input id="ef-a" type="text" class="fc" value="${esc(r.address)}"></div>
+    <div class="fg"><label class="fl">أسماء السلالة</label><textarea id="ef-l" class="fc" style="min-height:110px;">${esc(r.lineage)}</textarea></div>`;
+  } else {
+    f=`<div class="fr2"><div class="fg"><label class="fl">الاسم الكامل</label><input id="ef-n" type="text" class="fc" value="${esc(r.fullname)}"></div><div class="fg"><label class="fl">اسم العائلة</label><input id="ef-fm" type="text" class="fc" value="${esc(r.familyName)}"></div></div>
+    <div class="fr2"><div class="fg"><label class="fl">رقم التحقق</label><input id="ef-vn" type="text" class="fc" value="${esc(r.verifNo)}"></div><div class="fg"><label class="fl">المنصب المطلوب</label><input id="ef-rp" type="text" class="fc" value="${esc(r.reqPosition)}"></div></div>
+    <div class="fg"><label class="fl">العنوان</label><input id="ef-a" type="text" class="fc" value="${esc(r.address)}"></div>
+    <div class="fg"><label class="fl">البريد الإلكتروني</label><input id="ef-em" type="email" class="fc" value="${esc(r.email)}" dir="ltr"></div>`;
+  }
+  document.getElementById('edit-f').innerHTML=f;
+  document.getElementById('e-st').value=r.status;
+  oM('ov-edit');
+}
+function saveEd(){
+  const r=DB.find(x=>x.id===curEdId); if(!r)return;
+  const n=document.getElementById('ef-n'); if(n)r.fullname=n.value.trim();
+  r.status=document.getElementById('e-st').value;
+  if(r.type==='verif'){
+    const p=document.getElementById('ef-p'); if(p)r.position=p.value.trim();
+    const a=document.getElementById('ef-a'); if(a)r.address=a.value.trim();
+    const l=document.getElementById('ef-l'); if(l)r.lineage=l.value.trim();
+  } else {
+    const fm=document.getElementById('ef-fm'); if(fm)r.familyName=fm.value.trim();
+    const vn=document.getElementById('ef-vn'); if(vn)r.verifNo=vn.value.trim();
+    const rp=document.getElementById('ef-rp'); if(rp)r.reqPosition=rp.value.trim();
+    const a=document.getElementById('ef-a');  if(a)r.address=a.value.trim();
+    const em=document.getElementById('ef-em'); if(em)r.email=em.value.trim();
+  }
+  save(); cM('ov-edit'); renderAdmin();
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function oM(id){ document.getElementById(id).classList.add('open'); }
+function cM(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m)m.classList.remove('open'); }));
+</script>
+</body>
+</html>
