@@ -1109,7 +1109,7 @@ function hf(inp, prvId, nmId, showImg) {
   const ext = f.name.split('.').pop().toLowerCase();
   const ok = showImg ? ['jpg','jpeg','png'] : ['pdf','jpg','jpeg'];
   if (!ok.includes(ext)) { alert('نوع الملف غير مسموح. المقبول: '+ok.join(', ')); document.getElementById(inp).value=''; return; }
-  const maxMB=showImg?5:10; if(f.size>maxMB*1024*1024){ alert('حجم الملف كبير جداً. الحد الأقصى: '+maxMB+' MB'); document.getElementById(inp).value=''; return; }
+  const maxMB=10; if(f.size>maxMB*1024*1024){ alert('حجم الملف كبير جداً. الحد الأقصى: '+maxMB+' MB'); document.getElementById(inp).value=''; return; }
   const prv = document.getElementById(prvId); const nm = document.getElementById(nmId);
   if (nm) nm.textContent = '✅ ' + f.name;
   prv.style.display = 'block';
